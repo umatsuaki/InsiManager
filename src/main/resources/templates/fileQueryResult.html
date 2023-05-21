@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>File Search</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}" type="text/javascript"></script>
+</head>
+<body>
+    <!-- 検索フォーム -->
+    <form method="get" th:action="@{/fileQuery/search}" >
+        
+
+    <!-- 検索結果 -->
+    <table>
+        <thead>
+            <tr>
+                <th>ファイル名</th>
+                <th>ユーザ名</th>
+                <th>プレビュー</th>
+                <!-- ... -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="fileEntity : ${fileQueryResult}">
+                <td th:text="${fileEntity.fileName}"></td>
+                <td th:text="${fileEntity.user.uid}"></td>
+                <!--
+                <td>
+                    <form th:action="@{/download}" method="get">
+                        <input type="hidden" name="id" th:value="${fileEntity.fid}" />
+                        <input type="submit" value="ダウンロード" />
+                    </form>
+                </td>
+            -->
+                <td>
+                    <a th:href="@{/preview(id=${fileEntity.fid})}" target="_blank">PDFプレビュー</a>
+                </td>
+                <!-- ... -->
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+    <form method="get" th:action="@{/user/addfile}">
+        <input class="btn btn-primary" type="submit" value="ファイル追加">
+    </form> <br>
+    
+    <form method="get" th:action="@{user/deletefile/}">
+        <input class="btn btn-primary" type="submit" value="ファイル削除">
+    <div>
+</body>
+</html>
