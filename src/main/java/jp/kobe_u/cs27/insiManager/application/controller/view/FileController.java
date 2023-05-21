@@ -163,6 +163,7 @@ public class FileController {
             response.setHeader("Cache-Control", "private");
             response.setHeader("Pragma", "");
             response.setHeader("Content-Disposition", "inline;");
+            response.setHeader("Title", fileEntity.getFileName());
 
             // ダウンロードファイルへ出力
             try (OutputStream out = response.getOutputStream();InputStream in = fileData.getBinaryStream() ){

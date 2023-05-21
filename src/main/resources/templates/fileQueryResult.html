@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>File Search</title>
+    <title>File Search</title> 
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
     <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}" type="text/javascript"></script>
 </head>
@@ -34,7 +34,7 @@
                 </td>
             -->
                 <td>
-                    <a th:href="@{/preview(id=${fileEntity.fid})}" target="_blank">PDFプレビュー</a>
+                    <a th:href="@{/preview(id=${fileEntity.fid})}" th:text="${fileEntity.fileName}" target="_blank">PDFプレビュー</a>
                 </td>
                 <!-- ... -->
             </tr>
