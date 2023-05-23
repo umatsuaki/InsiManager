@@ -34,7 +34,7 @@
                 </td>
             -->
                 <td>
-                    <a th:href="@{/preview(id=${fileEntity.fid})}" th:text="${fileEntity.fileName}" target="_blank">PDFプレビュー</a>
+                    <a th:href="@{/preview/{fileName}(id=${fileEntity.fid}, fileName=${fileEntity.fileName})}" th:text="${fileEntity.fileName}" target="_blank">PDFプレビュー</a>
                 </td>
                 <!-- ... -->
             </tr>

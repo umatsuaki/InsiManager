@@ -29,6 +29,8 @@ public class FileForm {
     // ファイルデータ
     private MultipartFile data;
 
+    private String comment;
+
     
 
 }

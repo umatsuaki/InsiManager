@@ -51,6 +51,9 @@ public class FileEntity {
     //　ファイルのサイズ
     private String fileSize;
 
+    // ファイルへのコメント
+    private String comment;
+
     //　マイフォルダかどうか
     private boolean myfolder;
 

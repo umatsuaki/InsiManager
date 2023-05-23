@@ -23,7 +23,7 @@ public class PageController {
     
   @GetMapping("/")
   public String showLandingPage(){
-    return "test";
+    return "index";
   }
 
   @GetMapping("/user/signup")
@@ -61,4 +61,6 @@ public class PageController {
       model.addAttribute("fileList", fileList);  
       return "upload";
   }
+
+  
 }

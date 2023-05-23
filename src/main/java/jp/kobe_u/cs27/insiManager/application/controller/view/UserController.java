@@ -85,7 +85,7 @@ public class UserController {
         nickname);
 
     // ファイル検索ページ
-    return "redirect:/fileQuery";
+    return "redirect:/fileinformation";
   }
 
   

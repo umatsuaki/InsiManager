@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,8 +25,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jp.kobe_u.cs27.insiManager.application.form.FileForm;
 import jp.kobe_u.cs27.insiManager.application.form.FileQueryForm;
 import jp.kobe_u.cs27.insiManager.domain.entity.FileEntity;
+import jp.kobe_u.cs27.insiManager.domain.entity.Genre;
+import jp.kobe_u.cs27.insiManager.domain.entity.Subject;
 import jp.kobe_u.cs27.insiManager.domain.repository.FileRepository;
 import jp.kobe_u.cs27.insiManager.domain.service.FileService;
+import jp.kobe_u.cs27.insiManager.domain.service.GenreService;
+import jp.kobe_u.cs27.insiManager.domain.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -35,6 +41,8 @@ public class FileController {
     
     private final FileService fileService;
     private final FileRepository files;
+    private final SubjectService subjectService;
+    private final GenreService genreService;
 
     /**
      * ファイルをアップロードする
@@ -84,11 +92,11 @@ public class FileController {
                         true);
 
                 // 自分自身にリダイレクトする
-                return "redirect:/file/fileQuery/search";
+                return "redirect:/fileQuery/search";
             }
 
             // ユーザIDのみの条件で自分自身にリダイレクトする
-            return "redirect:/file/fileQuery/search";
+            return "redirect:/fileQuery/search";
         }
 
         // 空文字をnullに変換
@@ -120,8 +128,7 @@ public class FileController {
             response.setContentType("application/octet-stream");
             response.setHeader("Cache-Control", "private");
             response.setHeader("Pragma", "");
-            String fileName = fileEntity.getFileName() + ".pdf";
-            /* 
+           /* 
             response.setHeader("Content-Disposition"
             ,"attachment;filename=\"" + fileName + "\"");
             */
@@ -147,8 +154,8 @@ public class FileController {
  * @param response
  * @throws SQLException
  */
-        @RequestMapping("/preview")
-    public void preview(@RequestParam("id") long id, HttpServletResponse response) throws SQLException {
+        @RequestMapping("/preview/{fileName}")
+    public void preview(@PathVariable("fileName") String fileName,@RequestParam("id") long id, HttpServletResponse response) throws SQLException {
     // ダウンロード対象のファイルデータを取得
     Optional<FileEntity> file = files.findById(id);
     if (file.isPresent()) {
@@ -163,8 +170,6 @@ public class FileController {
             response.setHeader("Cache-Control", "private");
             response.setHeader("Pragma", "");
             response.setHeader("Content-Disposition", "inline;");
-            response.setHeader("Title", fileEntity.getFileName());
-
             // ダウンロードファイルへ出力
             try (OutputStream out = response.getOutputStream();InputStream in = fileData.getBinaryStream() ){
                 byte[] buffer = new byte[1024];
@@ -178,7 +183,47 @@ public class FileController {
             System.err.println(e);
         }
     }
-    }   
+    }
+    
+    @GetMapping("/fileinformation")
+  public String showInformationPage(Model model,RedirectAttributes attributes,
+  @ModelAttribute  FileQueryForm form,BindingResult bindingResult){
+
+      model.addAttribute(new FileQueryForm());
+      List<Genre> genreList = genreService.getAllGenre();
+      model.addAttribute("genreList",genreList);
+      List<Subject> subjectList = subjectService.getAllSubject();
+      model.addAttribute("subjectList", subjectList);
+      List<FileEntity> fileList = fileService.getAllFile();
+      model.addAttribute("fileList", fileList); 
+      
+      // フォームのバリデーション違反があった場合
+      if (bindingResult.hasErrors()) {
+        // ユーザIDに使用できない文字が含まれていた場合
+        if (bindingResult.getFieldErrors().stream().anyMatch(it -> it.getField().equals("uid"))) {
+            // エラーフラグをオンにする
+            attributes.addFlashAttribute(
+                    "isUidValidationError",
+                    true);
+
+            // 自分自身にリダイレクトする
+            return "redirect:/fileQuery/search";
+        }
+
+        // ユーザIDのみの条件で自分自身にリダイレクトする
+        return "redirect:/fileinformation";
+    }
+     // 空文字をnullに変換
+     if(form.getUid() == ""){
+        form.setUid(null);
+    }
+
+    // ファイルを検索し、結果をModelに格納する
+    // PostQueryFormをModelに追加する(Thymeleaf上ではhealthQueryForm)
+    model.addAttribute("fileQueryResult",fileService.query(form).getFilelist());
+   
+      return "fileinformation";
+  }
        	
  }
 

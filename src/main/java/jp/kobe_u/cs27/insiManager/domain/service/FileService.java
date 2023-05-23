@@ -65,6 +65,7 @@ public class FileService {
         Genre genre = genres.getReferenceById(form.getGid());
         Subject subject = subjects.getReferenceById(form.getSid());
         int year = form.getYear();
+        String comment = form.getComment();
         
 
         //ファイルデータを取得
@@ -74,8 +75,8 @@ public class FileService {
         long size = multipartFile.getSize();
         String fileSize = String.valueOf(size);
         final String fileName = Integer.toString(year) + "年"
-        + subject.getSubjectName() + genre.getGenreName() 
-        + "(" + fileSize + ")";
+        + subject.getSubjectName() + genre.getGenreName() +"-----"
+        + comment;
         
         log.info("FileName: " + fileName);
 		log.info("Subject: " + subject.getSubjectName());
@@ -83,6 +84,7 @@ public class FileService {
         log.info("ジャンル: " + genre.getGenreName());
 		log.info("FileType: " + fileType);
 		log.info("FileSize: " + fileSize);
+        log.info("Comment: " + comment);
 
         InputStream inputStream = multipartFile.getInputStream();
         // InputStreamからバイト配列を取得
@@ -103,6 +105,7 @@ public class FileService {
             fileName,
             fileType,
             fileSize,
+            comment,
             false,
             blob,
             new Timestamp(System.currentTimeMillis())
