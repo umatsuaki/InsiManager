@@ -75,7 +75,7 @@ public class FileService {
         long size = multipartFile.getSize();
         String fileSize = String.valueOf(size);
         final String fileName = Integer.toString(year) + "年"
-        + subject.getSubjectName() + genre.getGenreName() +"-----"
+        + subject.getSubjectName() + genre.getGenreName() +"---"
         + comment;
         
         log.info("FileName: " + fileName);
