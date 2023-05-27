@@ -62,6 +62,8 @@ public class FileController {
             FileForm form,
         BindingResult bindingResult) throws SQLException{
 
+        
+
         //ファイルをデータベースに保存する
         fileService.saveFile(form);
          return "redirect:/";
@@ -103,6 +105,7 @@ public class FileController {
         if(form.getUid() == ""){
             form.setUid(null);
         }
+        
 
         // ファイルを検索し、結果をModelに格納する
         // PostQueryFormをModelに追加する(Thymeleaf上ではhealthQueryForm)
@@ -217,6 +220,7 @@ public class FileController {
      if(form.getUid() == ""){
         form.setUid(null);
     }
+    
 
     // ファイルを検索し、結果をModelに格納する
     // PostQueryFormをModelに追加する(Thymeleaf上ではhealthQueryForm)

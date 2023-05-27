@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <title>ユーザ新規登録</title>
     <link rel="stylesheet"
-      th:href="@{/webjars/bootstrap/5.0.0-beta3/css/bootstrap.min.css}" />
-    <script th:src="@{/webjars/bootstrap/5.0.0-beta3/js/bootstrap.min.js}"
+      th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"
       type="text/javascript"></script>
   </head>
   <body class="m-3">
 
+    
+
     <h1>ユーザ新規登録</h1>
 
-    <img class="mb-3" th:src="@{/images/nene_surprise.png}" width="100">
-
+    
     <h2 th:if="${isUserAlreadyExistsError}" class="text-danger">ユーザが登録済みです</h2>
     <h2 th:if="${isUserFormError}" class="text-danger">ユーザの登録情報が誤っています</h2>
 
