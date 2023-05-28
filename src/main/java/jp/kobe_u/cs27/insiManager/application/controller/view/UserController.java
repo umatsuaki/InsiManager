@@ -1,5 +1,7 @@
 package jp.kobe_u.cs27.insiManager.application.controller.view;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,7 +15,12 @@ import jp.kobe_u.cs27.insiManager.application.form.FileQueryForm;
 import jp.kobe_u.cs27.insiManager.application.form.UidForm;
 import jp.kobe_u.cs27.insiManager.application.form.UserForm;
 import jp.kobe_u.cs27.insiManager.configuration.exception.ValidationException;
-import jp.kobe_u.cs27.insiManager.domain.entity.User;
+import jp.kobe_u.cs27.insiManager.domain.entity.FileEntity;
+import jp.kobe_u.cs27.insiManager.domain.entity.Genre;
+import jp.kobe_u.cs27.insiManager.domain.entity.Subject;
+import jp.kobe_u.cs27.insiManager.domain.service.FileService;
+import jp.kobe_u.cs27.insiManager.domain.service.GenreService;
+import jp.kobe_u.cs27.insiManager.domain.service.SubjectService;
 import jp.kobe_u.cs27.insiManager.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +33,9 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
   private final UserService service;
+  private final FileService fileService;
+  private final SubjectService subjectService;
+  private final GenreService genreService;
 
   /**
    * ユーザIDを指定して必要な情報を取得し、ファイル検索ページに入る
@@ -33,16 +43,14 @@ public class UserController {
    *
    * @param model
    * @param attributes
-   * @param form  ユーザID
+   * @param form       ユーザID
    * @return 体調入力ページ
    */
   @GetMapping("/user/enter")
   public String confirmUserExistence(
       Model model,
       RedirectAttributes attributes,
-      @ModelAttribute
-      @Validated
-          UidForm form,
+      @ModelAttribute @Validated UidForm form,
       BindingResult bindingResult) {
 
     // ユーザIDに使用できない文字が含まれていた場合
@@ -85,68 +93,7 @@ public class UserController {
         nickname);
 
     // ファイル検索ページ
-    return "redirect:/fileinformation";
-  }
-
-  
-  /**
-   * ユーザの情報を取得し、確認画面を表示する
-   *
-   * @param model
-   * @param attributes
-   * @param form  ユーザID
-   * @return ユーザ情報確認ページ
-   */
-  @GetMapping("/user/information")
-  public String searchUserInformation(
-      Model model,
-      RedirectAttributes attributes,
-      @ModelAttribute
-      @Validated
-          UidForm form,
-      BindingResult bindingResult) {
-
-    // ユーザIDに使用できない文字が含まれていた場合
-    if (bindingResult.hasErrors()) {
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUidValidationError",
-          true);
-
-      // 初期画面に戻る
-      return "redirect:/";
-    }
-
-    // ユーザIDを変数に格納する
-    final String uid = form.getUid();
-
-    // ユーザ情報をDBから取得する
-    // ユーザが登録済みかどうかの確認も兼ねている
-    User user;
-    try {
-      user = service.getUser(uid);
-    } catch (ValidationException e) {
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUserDoesNotExistError",
-          true);
-      // 初期ページに戻る
-      return "redirect:/";
-    }
-
-    // ユーザ情報をModelに登録する
-    model.addAttribute(
-        "uid",
-        uid);
-    model.addAttribute(
-        "nickname",
-        user.getNickname());
-    model.addAttribute(
-        "email",
-        user.getEmail());
-
-    // ユーザ情報確認ページ
-    return "information";
+    return "redirect:/";
   }
 
   /**
@@ -154,16 +101,15 @@ public class UserController {
    *
    * @param model
    * @param attributes
-   * @param form  UserForm
+   * @param form       UserForm
    * @return ユーザ登録確認ページ
    */
   @PostMapping("/user/register")
   public String registerUser(
       Model model,
       RedirectAttributes attributes,
-      @ModelAttribute
-      @Validated
-          UserForm form,
+      @ModelAttribute @Validated UserForm userform,
+      @ModelAttribute FileQueryForm fileform,
       BindingResult bindingResult) {
 
     // フォームにバリデーション違反があった場合
@@ -179,7 +125,7 @@ public class UserController {
 
     // ユーザを登録する
     try {
-      service.createUser(form);
+      service.createUser(userform);
     } catch (ValidationException e) {
       // ユーザが登録済みであった場合
       // エラーフラグをオンにする
@@ -191,19 +137,18 @@ public class UserController {
       return "redirect:/user/signup";
     }
 
-    // ユーザIDとニックネームをModelに登録する
-    model.addAttribute(
-        "uid",
-        form.getUid());
-    model.addAttribute(
-        "nickname",
-        form.getNickname());
-    
-    //FileQueryFormをModelに追加する(Thymeleaf上ではfileQueryForm)
     model.addAttribute(new FileQueryForm());
+    List<Genre> genreList = genreService.getAllGenre();
+    model.addAttribute("genreList", genreList);
+    List<Subject> subjectList = subjectService.getAllSubject();
+    model.addAttribute("subjectList", subjectList);
+    List<FileEntity> fileList = fileService.getAllFile();
+    model.addAttribute("fileList", fileList);
+    model.addAttribute("resultSize", fileService.query(fileform).getFilelist().size());
+    model.addAttribute("fileQueryResult", fileService.query(fileform).getFilelist());
 
-    // ユーザ登録確認ページ
-    return "signup/confirm";
+    // ファイル検索ページ
+    return "redirect:/";
   }
 
   /**
@@ -212,16 +157,14 @@ public class UserController {
    *
    * @param model
    * @param attributes
-   * @param form  UserForm
+   * @param form       UserForm
    * @return ユーザ登録確認ページ
    */
   @GetMapping("/user/register/confirm")
   public String confirmUserRegistration(
       Model model,
       RedirectAttributes attributes,
-      @ModelAttribute
-      @Validated
-          UserForm form,
+      @ModelAttribute @Validated UserForm form,
       BindingResult bindingResult) {
 
     // フォームにバリデーション違反があった場合
@@ -264,228 +207,4 @@ public class UserController {
     return "confirmRegistration";
   }
 
-  /**
-   * ユーザ情報を更新する
-   *
-   * @param model
-   * @param attributes
-   * @param form  UserForm
-   * @return 体調記録ページ
-   */
-  @PostMapping("/user/update")
-  public String updateUser(
-      Model model,
-      RedirectAttributes attributes,
-      @ModelAttribute
-      @Validated
-          UserForm form,
-      BindingResult bindingResult) {
-
-    // フォームにバリデーション違反があった場合
-    if (bindingResult.hasErrors()) {
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUserFormError",
-          true);
-
-      // リダイレクト先の引数としてユーザIDを渡す
-      attributes.addAttribute(
-          "uid",
-          form.getUid());
-
-      // ユーザ情報取得メソッドにリダイレクトする
-      return "redirect:/user/information";
-    }
-
-    // ユーザ情報を更新する
-    try {
-      service.updateUser(form);
-    } catch (ValidationException e) {
-      // ユーザが存在しない場合
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUserDoesNotExistError",
-          true);
-      // 初期ページに戻る
-      return "redirect:/";
-    }
-
-    // ユーザIDとニックネームをModelに追加する
-    model.addAttribute(
-        "uid",
-        form.getUid());
-    model.addAttribute(
-        "nickname",
-        form.getNickname());
-
-
-    // ファイル検索ページ
-    return "fileQuery";
-  }
-
-  /**
-   * ユーザ情報更新が可能か確認する
-   *
-   * @param model
-   * @param attributes
-   * @param form  UserForm
-   * @return ユーザ情報更新確認ページ
-   */
-  @GetMapping("/user/update/confirm")
-  public String confirmUserUpdate(
-      Model model,
-      RedirectAttributes attributes,
-      @ModelAttribute
-      @Validated
-          UserForm form,
-      BindingResult bindingResult) {
-
-    // フォームにバリデーション違反があった場合
-    if (bindingResult.hasErrors()) {
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUserFormError",
-          true);
-
-      // リダイレクト先の引数としてユーザIDを渡す
-      attributes.addAttribute(
-          "uid",
-          form.getUid());
-
-      // ユーザ情報取得メソッドにリダイレクトする
-      return "redirect:/user/information";
-    }
-
-    // ユーザIDを変数に格納する
-    final String uid = form.getUid();
-
-    // ユーザが登録済みか確認する
-    if (!service.existsUser(uid)) {
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUserAlreadyExistsError",
-          true);
-
-      // リダイレクト先の引数としてユーザIDを渡す
-      attributes.addAttribute(
-          "uid",
-          form.getUid());
-
-      // ユーザ情報取得メソッドにリダイレクトする
-      return "redirect:/user/information";
-    }
-
-    // ユーザ情報をModelに追加する
-    model.addAttribute(
-        "uid",
-        uid);
-    model.addAttribute(
-        "nickname",
-        form.getNickname());
-    model.addAttribute(
-        "email",
-        form.getEmail());
-
-    // ユーザ情報更新確認ページ
-    return "confirmUpdate";
-  }
-
-  /**
-   * ユーザを削除する
-   *
-   * @param model
-   * @param attributes
-   * @param form ユーザID
-   * @return 初期ページ
-   */
-  @PostMapping("/user/delete")
-  public String deleteUser(
-      Model model,
-      RedirectAttributes attributes,
-      @ModelAttribute
-      @Validated
-          UidForm form,
-      BindingResult bindingResult) {
-
-    // ユーザIDに使用できない文字が含まれていた場合
-    if (bindingResult.hasErrors()) {
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUidValidationError",
-          true);
-
-      // 初期画面に戻る
-      return "redirect:/";
-    }
-
-    // ユーザIDを変数に格納する
-    final String uid = form.getUid();
-
-    // ユーザを削除する
-    service.deleteUser(uid);
-
-    // 初期ページ
-    return "redirect:/";
-  }
-
-  /**
-   * ユーザ削除が可能か確認する
-   *
-   * @param model
-   * @param attributes
-   * @param form  　ユーザID
-   * @return ユーザ削除確認ページ
-   */
-  @GetMapping("/user/delete/confirm")
-  public String confirmUserDelete(
-      Model model,
-      RedirectAttributes attributes,
-      @ModelAttribute
-      @Validated
-          UidForm form,
-      BindingResult bindingResult) {
-
-    // ユーザIDに使用できない文字が含まれていた場合
-    if (bindingResult.hasErrors()) {
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUidValidationError",
-          true);
-
-      // 初期画面に戻る
-      return "redirect:/";
-    }
-
-    // ユーザIDを変数に格納する
-    final String uid = form.getUid();
-
-    // ユーザ情報をDBから取得する
-    // ユーザが登録済みかどうかの確認も兼ねている
-    User user;
-    try {
-      user = service.getUser(uid);
-    } catch (ValidationException e) {
-      // エラーフラグをオンにする
-      attributes.addFlashAttribute(
-          "isUserDoesNotExistError",
-          true);
-      // 初期ページに戻る
-      return "redirect:/";
-    }
-
-    // ユーザ情報をModelに追加する
-    model.addAttribute(
-        "uid",
-        uid);
-    model.addAttribute(
-        "nickname",
-        user.getNickname());
-    model.addAttribute(
-        "email",
-        user.getEmail());
-
-    // ユーザ削除確認ページ
-    return "confirmDelete";
-
-  }
 }

@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 
 import static jp.kobe_u.cs27.insiManager.configuration.exception.ErrorCode.*;
 
-
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -49,85 +48,88 @@ public class FileService {
     private final FileRepository files;
 
     private static Logger log = LoggerFactory.getLogger(FileController.class);
-    public static String uploadDirectory = System.getProperty("user.dir")+"/uploads";
-    
+    public static String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
     /**
      * ファイルを保存する
+     * 
      * @param form
      * @return 記録したファイル
      */
     public void saveFile(FileForm form) {
 
-    try{
-        // IDからEntity取得
-        User user = users.getReferenceById(form.getUid());
-        Genre genre = genres.getReferenceById(form.getGid());
-        Subject subject = subjects.getReferenceById(form.getSid());
-        int year = form.getYear();
-        String comment = form.getComment();
-        
+        try {
+            // IDからEntity取得
+            User user = users.getReferenceById(form.getUid());
+            Genre genre = genres.getReferenceById(form.getGid());
+            Subject subject = subjects.getReferenceById(form.getSid());
+            int year = form.getYear();
+            String comment = form.getComment();
 
-        //ファイルデータを取得
-        MultipartFile multipartFile = form.getData();
-        Integer.valueOf(year);
-        String fileType = multipartFile.getContentType();
-        long size = multipartFile.getSize();
-        String fileSize = String.valueOf(size);
-        final String fileName = Integer.toString(year) + "年"
-        + subject.getSubjectName() + genre.getGenreName() +"---"
-        + comment;
-        
-        log.info("FileName: " + fileName);
-		log.info("Subject: " + subject.getSubjectName());
-        log.info("Year: "+ Integer.toString(year));
-        log.info("ジャンル: " + genre.getGenreName());
-		log.info("FileType: " + fileType);
-		log.info("FileSize: " + fileSize);
-        log.info("Comment: " + comment);
+            
 
-        InputStream inputStream = multipartFile.getInputStream();
-        // InputStreamからバイト配列を取得
-        byte [] fileBytes = inputStream.readAllBytes();
-        // Blobオブジェクトに変換
-        Blob blob = new SerialBlob(fileBytes);
-        // InputStreamをクローズ
-        inputStream.close();
+            // ファイルデータを取得
+            MultipartFile multipartFile = form.getData();
+            Integer.valueOf(year);
+            String fileType = multipartFile.getContentType();
+            long size = multipartFile.getSize();
+            String fileSize = String.valueOf(size);
+            String fileName;
 
-    
+            if (!comment.equals("")) {
+                fileName = Integer.toString(year) + "年"
+                        + subject.getSubjectName() + genre.getGenreName() + "---"
+                        + comment;
+            } else {
+                fileName = Integer.toString(year) + "年"
+                        + subject.getSubjectName() + genre.getGenreName();
+            }
 
-          files.save(new FileEntity(
-            null,
-            user,
-            subject,
-            year,
-            genre,
-            fileName,
-            fileType,
-            fileSize,
-            comment,
-            false,
-            blob,
-            new Timestamp(System.currentTimeMillis())
-        ));}catch (Exception e) {
-			e.printStackTrace();
-			log.info("Exception: " + e);
+            log.info("FileName: " + fileName);
+            log.info("Subject: " + subject.getSubjectName());
+            log.info("Year: " + Integer.toString(year));
+            log.info("ジャンル: " + genre.getGenreName());
+            log.info("FileType: " + fileType);
+            log.info("FileSize: " + fileSize);
+            log.info("Comment: " + comment);
+
+            InputStream inputStream = multipartFile.getInputStream();
+            // InputStreamからバイト配列を取得
+            byte[] fileBytes = inputStream.readAllBytes();
+            // Blobオブジェクトに変換
+            Blob blob = new SerialBlob(fileBytes);
+            // InputStreamをクローズ
+            inputStream.close();
+
+            files.save(new FileEntity(
+                    null,
+                    user,
+                    subject,
+                    year,
+                    genre,
+                    fileName,
+                    fileType,
+                    fileSize,
+                    comment,
+                    false,
+                    blob,
+                    new Timestamp(System.currentTimeMillis())));
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("Exception: " + e);
         }
 
-    
-    
-
-    /* 
-        // ユーザが登録されていない場合エラーを返す
-    if (!users.existsById(form.getUid())) {
-        throw new ValidationException(
-            USER_DOES_NOT_EXIST,
-            "record the health condition",
-            String.format(
-                "user %s does not exist",
-                form.getUid()));
-      }
-    */
+        /*
+         * // ユーザが登録されていない場合エラーを返す
+         * if (!users.existsById(form.getUid())) {
+         * throw new ValidationException(
+         * USER_DOES_NOT_EXIST,
+         * "record the health condition",
+         * String.format(
+         * "user %s does not exist",
+         * form.getUid()));
+         * }
+         */
     }
 
     /**
@@ -137,32 +139,29 @@ public class FileService {
      * @throws SQLException
      */
     public ResponseEntity<Resource> loadFile(long fid) throws SQLException {
-        if(files.existsById(fid)){
+        if (files.existsById(fid)) {
             Optional<FileEntity> downloadFile = files.findById(fid);
             Blob downloadData = downloadFile.get().getData();
             byte[] bs;
-            bs = downloadData.getBytes(1,(int)downloadData.length());
-                return  ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(downloadFile.get().getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + downloadFile.get().getFileName()
-                + "\"")
-                .body(new ByteArrayResource(bs));
-            
+            bs = downloadData.getBytes(1, (int) downloadData.length());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(downloadFile.get().getFileType()))
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + downloadFile.get().getFileName()
+                                    + "\"")
+                    .body(new ByteArrayResource(bs));
+
         }
-    
-        else{
+
+        else {
             throw new ValidationException(
-                FILE_DOES_NOT_EXIST,
-                "delete the file",
-                String.format(
-                    " file %s does not exist",
-                    fid));
+                    FILE_DOES_NOT_EXIST,
+                    "delete the file",
+                    String.format(
+                            " file %s does not exist",
+                            fid));
         }
     }
-        
-    
-
 
     /**
      * すべてのファイルを新しい順に取得
@@ -184,7 +183,7 @@ public class FileService {
      * ファイルをユーザ、教科、年度、ジャンル、キーワードで検索する
      */
 
-     public FileQueryResult query(FileQueryForm form) {
+    public FileQueryResult query(FileQueryForm form) {
         // フォームの中身を変数に格納する
         final Integer sid = form.getSid();
         final Integer gid = form.getGid();
@@ -194,10 +193,9 @@ public class FileService {
         List<FileEntity> fileList = new ArrayList<>();
 
         Sort sort = Sort.by(
-            Sort.Order.desc("year"),
-            Sort.Order.asc("subject.sid"),
-            Sort.Order.asc("genre.gid")
-        );
+                Sort.Order.desc("year"),
+                Sort.Order.asc("subject.sid"),
+                Sort.Order.asc("genre.gid"));
 
         fileList = files.findAll(Specification
                 .where(FileRepository.sidEquals(sid))
@@ -206,7 +204,6 @@ public class FileService {
                 .and(FileRepository.uidEquals(uid)),
                 sort);
 
-        
         // 検索結果を返す
         return new FileQueryResult(
                 uid,
@@ -217,28 +214,57 @@ public class FileService {
     }
 
     /**
+     * ファイルを教科で検索する
+     */
+
+     public FileQueryResult sidQuery(Integer sid) {
+        // フォームの中身を変数に格納する
+        
+
+        List<FileEntity> fileList = new ArrayList<>();
+
+        Sort sort = Sort.by(
+                Sort.Order.desc("year"),
+                Sort.Order.asc("subject.sid"),
+                Sort.Order.asc("genre.gid"));
+
+        fileList = files.findAll(Specification
+                .where(FileRepository.sidEquals(sid))
+                .and(FileRepository.gidEquals(null))
+                .and(FileRepository.yearEquals(null))
+                .and(FileRepository.uidEquals(null)),
+                sort);
+
+        // 検索結果を返す
+        return new FileQueryResult(
+                null,
+                sid,
+                null,
+                null,
+                fileList);
+    }
+
+
+    /**
      * ファイルを削除する
      * 処理に失敗した場合、このメソッド中のDB操作はすべてロールバックされる
      *
      * @param fid ファイルID
      */
-    public void deleteFile(long fid) {
-  
-      // ファイルが存在しない場合、例外を投げる
-      if (!files.existsById(fid)) {
-        throw new ValidationException(
-            FILE_DOES_NOT_EXIST,
-            "delete the file",
-            String.format(
-                " file %s does not exist",
-                fid));
-      }
-      // ファイルを削除する
-      files.deleteById(fid);
-      
-  
+    public void deleteFile(Long fid) {
+
+        // ファイルが存在しない場合、例外を投げる
+        if (!files.existsById(fid)) {
+            throw new ValidationException(
+                    FILE_DOES_NOT_EXIST,
+                    "delete the file",
+                    String.format(
+                            " file %s does not exist",
+                            fid));
+        }
+        // ファイルを削除する
+        files.deleteById(fid);
+
     }
-
-
 
 }

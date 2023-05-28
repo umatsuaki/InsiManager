@@ -26,7 +26,7 @@ public interface FileRepository
    *
    * @param fid ファイルID
    */
-  void deleteByFid(String fid);
+  void deleteByFid(Long fid);
 
     
  /**

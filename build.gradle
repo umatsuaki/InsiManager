@@ -27,6 +27,8 @@ dependencies {
 	implementation 'org.webjars:bootstrap:5.2.3'
 	implementation 'commons-fileupload:commons-fileupload:1.4'
 	implementation 'org.hibernate:hibernate-core:6.1.7.Final'
+	implementation 'org.webjars:jquery:3.1.1'
+	implementation 'org.webjars:tether:1.4.0'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'

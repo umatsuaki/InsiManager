@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>File Search</title>
+        <link rel="stylesheet"
+            th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+        <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"
+            type="text/javascript"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-8">
+
+                    <div class="search-results">
+                        <br>
+                        <br>
+
+                        <table
+                            id="container"
+                            class="table mb-3 text-center table-success table-bordered table-striped">
+                            <thead class="table-dark">
+                                <th>ファイル名</th>
+
+                            </thead>
+                            <tbody>
+                                <tr
+                                    th:each="fileEntity : ${fileQueryResult}">
+                                    <td>
+                                        <a
+                                            th:href="@{/preview/{fileName}(id=${fileEntity.fid}, fileName=${fileEntity.fileName})}"
+                                            th:text="${fileEntity.fileName}"
+                                            target="_blank">PDFプレビュー</a>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <br>
+                    <br>
+                    <div class="search-form ">
+
+                        <div class="card text-center text-dark bg-light  ">
+                            <div class="card-header">
+                                検索フォーム
+                            </div>
+                            <form method="get"
+                                th:action="@{/filequery}"
+                                th:object="${fileQueryForm}">
+
+                                <div class="form-group mb-3 ">
+                                    <label for="uid" class="form-label"></label>
+                                    <input th:field="*{uid}" type="text"
+                                        id="uid" class="form-control"
+                                        placeholder="Enter uid">
+                                </div>
+
+                                <select class="form-select mb-3"
+                                    th:name="sid"
+                                    th:id="sid">
+                                    <option th:value=null th:text="教科" />
+                                    <option
+                                        th:each="sList : ${subjectList}"
+                                        th:value="${sList.sid}"
+                                        th:field="*{sid}"
+                                        th:text="${sList.subjectName}" />
+                                </select>
+
+                                <select class="form-select mb-3"
+                                    th:name="gid"
+                                    th:id="gid">
+                                    <option th:value=null th:text="ジャンル" />
+                                    <option
+                                        th:each="gList : ${genreList}"
+                                        th:value="${gList.gid}"
+                                        th:field="*{gid}"
+                                        th:text="${gList.genreName}" />
+                                </select>
+
+                                <select class="form-select mb-3"
+                                    th:name="year"
+                                    th:id="year">
+                                    <option th:value=null th:text="年度" />
+                                    <option
+                                        th:each="i : ${#numbers.sequence(2001, 2050)}"
+                                        th:value="${i}"
+                                        th:field="*{year}"
+                                        th:text="${i}+年度" />
+                                </select>
+
+                                <div>
+                                    <input
+                                        class="btn btn-dark mb-3 "
+                                        type="submit" value="検索">
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <br>
+
+                        <div class="container text-center">
+                            <div class="row">
+
+                                <div class="col mb-3">
+                                    <form method="get"
+                                        th:action="@{/user/signup}">
+                                        <input class="btn btn-primary "
+                                            type="submit"
+                                            value="新規登録">
+                                    </form>
+                                </div>
+
+                                <div class="col mb-3">
+                                    <form method="get"
+                                        th:action="@{/user/addfile}">
+                                        <input class="btn btn-success "
+                                            type="submit"
+                                            value="ファイル追加">
+                                    </form>
+                                </div>
+
+                                <div class="col mb-3">
+                                    <form method="get"
+                                        th:action="@{/user/deletefile}">
+                                        <input class="btn btn-danger "
+                                            type="submit"
+                                            value="ファイル削除">
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+            integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+    </body>
+</html>

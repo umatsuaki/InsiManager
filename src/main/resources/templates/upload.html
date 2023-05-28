@@ -1,69 +1,105 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>File Upload Form</title>
-    <link rel="stylesheet"
-        th:href="@{/webjars/bootstrap/5.0.0-beta3/css/bootstrap.min.css}"/>
-  <script th:src="@{/webjars/bootstrap/5.0.0-beta3/js/bootstrap.min.js}"
-          type="text/javascript"></script>
-     <style>
-      .container {
-        margin: 50px;
-      }
-    </style>
-</head>
-<body>
-    <div class="container">
+    <head>
+        <meta charset="UTF-8">
+        <title>File Upload Form</title>
+        <link rel="stylesheet"
+            th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+        <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"
+            type="text/javascript"></script>
+    </head>
 
-    <h2>File Upload Form</h2>
-    <form th:action="@{/user/addfile/add}" th:object="${fileForm}" method="post" enctype="multipart/form-data">
-       
-        <div class="col-md-6 text-center mb-3">
+    <body>
+        <div class="container text-center">
+            <div class="row">
+                <br>
+                <br>
+                <div class="col-3">
+                </div>
+                <div class="col-6">
+                    <br>
+                    <br>
+                    <div class="card text-dark bg-light mb-3">
 
-        <div class="form-group">
-            <label class="custom-user-label" for="uid">User</label>
-            <input th:field="*{uid}" type="text">
-          </div>
-          
-            <div class="col-md-4">
-                <select class="form-select" th:name="sid" th:id="sid" required>
-                    <option th:each="sList : ${subjectList}" th:value="${sList.sid}" th:field="*{sid}" th:text="${sList.subjectName}" />
-                </select>
-            </div> 
-        
-            <div class="col-md-4">
-                <select class="form-select" th:name="gid" th:id="gid" required>
-                    <option th:each="gList : ${genreList}" th:value="${gList.gid}" th:field="*{gid}" th:text="${gList.genreName}" />
-                </select>
+                        <form th:action="@{/user/addfile/add}"
+                            th:object="${fileForm}"
+                            method="post" enctype="multipart/form-data">
+
+                            <div class="card-header  border-danger mb-3">File
+                                Upload Form</div>
+
+                            <div class="form-group mb-3 ">
+                                <label for="uid" class="form-label"></label>
+                                <input th:field="*{uid}" type="text"
+                                    id="uid" class="form-control"
+                                    placeholder="Enter uid" required>
+                            </div>
+
+                            <select class="form-select mb-3"
+                                th:name="sid"
+                                th:id="sid"
+                                required>
+
+                                <option th:each="sList : ${subjectList}"
+                                    th:value="${sList.sid}"
+                                    th:field="*{sid}"
+                                    th:text="${sList.subjectName}" />
+                            </select>
+
+                            <select class="form-select mb-3" th:name="gid"
+                                th:id="gid"
+                                required>
+                                <option th:each="gList : ${genreList}"
+                                    th:value="${gList.gid}" th:field="*{gid}"
+                                    th:text="${gList.genreName}" />
+                            </select>
+
+                            <select class="form-select mb-5" th:name="year"
+                                th:id="year"
+                                required>
+                                <option
+                                    th:each="i : ${#numbers.sequence(2001, 2050)}"
+                                    th:value="${i}" th:field="*{year}"
+                                    th:text="${i}+年度" />
+                            </select>
+
+                            <div>
+                                <div class="form-group mb-3">
+                                    <label for="data"> </label>
+                                    <input type="file" class="form-control-file"
+                                        id="data"
+                                        th:field="*{data}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="comment" class="form-label"></label>
+                                <input th:field="*{comment}"
+                                    class="form-control"
+                                    aria-describedby="commentHelp"
+                                    placeholder="Enter comment" id="comment"
+                                    type="text">
+                                <small id="commentHelp"
+                                    class="form-text text-muted">ファイルの説明を入力してください</small>
+                            </div>
+
+                            <div>
+                                <button type="submit" class="btn btn-dark mb-3">Upload</button>
+                            </div>
+                        </form>
+
+                    </div>
+                    <form method="get"
+                        th:action="@{/}">
+                        <input class="btn btn-info mb-3 "
+                            type="submit"
+                            value="ファイル検索に戻る">
+                    </form>
+                    <h2 th:if="${isUserDoesNotExistError}" class="text-danger">ユーザが見つかりません<br>ファイルをアップロードできません</h2>
+                    <div class="col-3">
+                    </div>
+                </div>
             </div>
-
-            <div class="col-md-4">
-                <select class="form-select" th:name="year" th:id="year" required>
-                    <option th:each="i : ${#numbers.sequence(1980, 2050)}" th:value="${i}" th:field="*{year}" th:text="${i}+年度" />
-                </select>
-            </div>
-
-
-
-        <div>
-            <label for="data">File:</label>
-            <input type="file" id="data" th:field="*{data}">
         </div>
-
-        <div class="form-group">
-            <label class="custom-user-label" for="comment">Comment</label>
-            <input th:field="*{comment}" type="text">
-          </div>
-
-        <div>
-            <button type="submit">Upload</button>
-        </div>
-            </div>
-        </div>
-    </form>
-</body>
+    </body>
 </html>
-
-
-</form>
