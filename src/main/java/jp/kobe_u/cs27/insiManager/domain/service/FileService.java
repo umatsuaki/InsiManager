@@ -171,6 +171,13 @@ public class FileService {
     }
 
     /**
+     * fidが一致するファイルを取得
+     */
+    public Optional<FileEntity> getFile(long fid) {
+        return files.findById(fid);
+    }
+
+    /**
      * uidが一致するすべてのファイルを新しい順に取得
      */
     public List<FileEntity> getAllUserFile(String uid) {

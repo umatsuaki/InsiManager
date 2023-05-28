@@ -44,7 +44,7 @@ public class UserController {
    * @param model
    * @param attributes
    * @param form       ユーザID
-   * @return 体調入力ページ
+   * @return ファイル検索ページ
    */
   @GetMapping("/user/enter")
   public String confirmUserExistence(

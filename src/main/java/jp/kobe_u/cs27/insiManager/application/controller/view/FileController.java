@@ -213,7 +213,7 @@ public class FileController {
                 return "redirect:/fileQuery/search";
             }
 
-            //自分自身にリダイレクトする
+            // 自分自身にリダイレクトする
             return "redirect:/fileinformation";
         }
         // 空文字をnullに変換
@@ -317,6 +317,34 @@ public class FileController {
         model.addAttribute("fileQueryResult", fileService.sidQuery(sid).getFilelist());
         return "filequery";
 
+    }
+
+    /**
+     * ファイルIDを入手してファイル削除確認ページに進む
+     * 
+     * @param fid
+     * @param model
+     * @param attributes
+     * @return
+     */
+    @GetMapping("/getfid/{fid}")
+    public String confirmUserRegistration(
+            @PathVariable("fid") long fid,
+            Model model,
+            RedirectAttributes attributes) {
+
+        // ファイルIDをModelに追加する
+        model.addAttribute(
+                "fid",
+                fid);
+
+        // ファイルの名前をModelに追加する
+        model.addAttribute("fileName", fileService.getFile(fid).get().getFileName());
+        model.addAttribute("user", fileService.getFile(fid).get().getUser().getUid());
+        model.addAttribute("addedTime", fileService.getFile(fid).get().getRecordedOn());
+
+        // ユーザ登録確認ページ
+        return "confirmDelete";
     }
 
 }

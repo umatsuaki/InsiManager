@@ -29,8 +29,8 @@
                                 <tr
                                     th:each="fileEntity : ${fileQueryResult}">
                                     <td>
-                                        <form th:method="post"
-                                            th:action="@{/delete/{id} (id=${fileEntity.fid})}">
+                                        <form th:method="get"
+                                            th:action="@{/getfid/{fid} (fid=${fileEntity.fid})}">
                                             <input class="btn btn-danger "
                                                 type="submit"
                                                 value="削除">

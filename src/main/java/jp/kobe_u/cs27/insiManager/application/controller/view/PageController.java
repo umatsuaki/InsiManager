@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.kobe_u.cs27.insiManager.application.form.FileForm;
@@ -23,6 +24,15 @@ public class PageController {
   private final FileService fileService;
   private final SubjectService subjectService;
   private final GenreService genreService;
+
+  /**
+   * 
+   * @param model
+   * @param attributes
+   * @param form
+   * @param bindingResult
+   * @return ファイル検索ページ
+   */
 
   @GetMapping("/")
   public String showDeletePage(Model model, RedirectAttributes attributes,
@@ -62,6 +72,12 @@ public class PageController {
     return "index";
   }
 
+  /**
+   * 
+   * @param model
+   * @return ユーザ登録ページ
+   */
+
   @GetMapping("/user/signup")
   public String showUserRegistrationPage(Model model) {
 
@@ -70,6 +86,12 @@ public class PageController {
 
     return "register";
   }
+
+  /**
+   * 
+   * @param model
+   * @return ファイル追加ページ
+   */
 
   @GetMapping("/user/addfile")
   public String showUploadFilePage(Model model) {
@@ -83,5 +105,7 @@ public class PageController {
     model.addAttribute("fileList", fileList);
     return "upload";
   }
+
+  
 
 }
