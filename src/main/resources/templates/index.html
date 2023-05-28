@@ -16,28 +16,60 @@
                     <div class="search-results">
                         <br>
                         <br>
+                        <div class="container mb-3">
+                            <div class="row">
+                                <div class="col">
+                                    <form method="get"
+                                        th:action="@{/filequery/1}">
+                                        <input
+                                            class="btn btn-primary rounded-circle p-5 mb-3"
+                                            type="submit"
+                                            value="数学">
+                                    </form>
+                                    <form method="get"
+                                        th:action="@{/filequery/4}">
+                                        <input
+                                            class="btn btn-success rounded-circle p-5 mb-3"
+                                            type="submit"
+                                            value="自動制御">
+                                    </form>
+                                </div>
+                                <div class="col">
+                                    <form method="get"
+                                        th:action="@{/filequery/2}">
+                                        <input
+                                            class="btn btn-danger rounded-circle p-5 mb-3"
+                                            type="submit"
+                                            value="電磁気学">
+                                    </form>
+                                    <form method="get"
+                                        th:action="@{/filequery/5}">
+                                        <input
+                                            class="btn btn-info rounded-circle p-5 mb-3"
+                                            type="submit"
+                                            value="情報理論">
+                                    </form>
+                                </div>
 
-                        <table
-                            id="container"
-                            class="table mb-3 text-center table-success table-bordered table-striped">
-                            <thead class="table-dark">
-                                <th>ファイル名</th>
+                                <div class="col">
+                                    <form method="get"
+                                        th:action="@{/filequery/3}">
+                                        <input
+                                            class="btn btn-warning rounded-circle p-5 mb-3"
+                                            type="submit"
+                                            value="電気電子回路">
+                                    </form>
+                                    <form method="get"
+                                        th:action="@{/filequery/6}">
+                                        <input
+                                            class="btn btn-secondary rounded-circle p-5 mb-3"
+                                            type="submit"
+                                            value="論理回路">
+                                    </form>
+                                </div>
 
-                            </thead>
-                            <tbody>
-                                <tr
-                                    th:each="fileEntity : ${fileQueryResult}">
-                                    <td>
-                                        <a
-                                            th:href="@{/preview/{fileName}(id=${fileEntity.fid}, fileName=${fileEntity.fileName})}"
-                                            th:text="${fileEntity.fileName}"
-                                            target="_blank">PDFプレビュー</a>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-
-                        </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -214,6 +214,38 @@ public class FileService {
     }
 
     /**
+     * ファイルを教科で検索する
+     */
+
+     public FileQueryResult sidQuery(Integer sid) {
+        // フォームの中身を変数に格納する
+        
+
+        List<FileEntity> fileList = new ArrayList<>();
+
+        Sort sort = Sort.by(
+                Sort.Order.desc("year"),
+                Sort.Order.asc("subject.sid"),
+                Sort.Order.asc("genre.gid"));
+
+        fileList = files.findAll(Specification
+                .where(FileRepository.sidEquals(sid))
+                .and(FileRepository.gidEquals(null))
+                .and(FileRepository.yearEquals(null))
+                .and(FileRepository.uidEquals(null)),
+                sort);
+
+        // 検索結果を返す
+        return new FileQueryResult(
+                null,
+                sid,
+                null,
+                null,
+                fileList);
+    }
+
+
+    /**
      * ファイルを削除する
      * 処理に失敗した場合、このメソッド中のDB操作はすべてロールバックされる
      *

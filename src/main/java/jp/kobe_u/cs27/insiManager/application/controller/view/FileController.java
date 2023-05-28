@@ -3,7 +3,6 @@ package jp.kobe_u.cs27.insiManager.application.controller.view;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,50 +63,11 @@ public class FileController {
     }
 
     /**
-     * ファイルをアップロードしたユーザ、教科、ジャンル、年度、キーワードで検索する
-     *
-     * @param model
-     * @param attributes
-     * @param form       FileQueryForm
-     * @return 検索結果
+     * ファイルをダウンロードする
+     * 
+     * @param id
+     * @param response
      */
-    @GetMapping("/fileQuery/search")
-    public String searchFile(
-            Model model,
-            RedirectAttributes attributes,
-            @ModelAttribute FileQueryForm form,
-            BindingResult bindingResult) {
-
-        // フォームのバリデーション違反があった場合
-        if (bindingResult.hasErrors()) {
-            // ユーザIDに使用できない文字が含まれていた場合
-            if (bindingResult.getFieldErrors().stream().anyMatch(it -> it.getField().equals("uid"))) {
-                // エラーフラグをオンにする
-                attributes.addFlashAttribute(
-                        "isUidValidationError",
-                        true);
-
-                // 自分自身にリダイレクトする
-                return "redirect:/fileQuery/search";
-            }
-
-            // ユーザIDのみの条件で自分自身にリダイレクトする
-            return "redirect:/fileQuery/search";
-        }
-
-        // 空文字をnullに変換
-        if (form.getUid() == "") {
-            form.setUid(null);
-        }
-
-        // ファイルを検索し、結果をModelに格納する
-        // PostQueryFormをModelに追加する(Thymeleaf上ではhealthQueryForm)
-        model.addAttribute("fileQueryResult", fileService.query(form).getFilelist());
-
-        // 検索結果
-        return "fileQueryResult";
-    }
-
     @RequestMapping("/download")
     public void download(@RequestParam("id") long id, HttpServletResponse response) {
         // ダウンロード対象のファイルデータを取得
@@ -181,6 +140,12 @@ public class FileController {
         }
     }
 
+    /**
+     * 
+     * @param id
+     * @return ファイル削除ページ
+     */
+
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id) {
         // ダウンロード対象のファイルデータを取得
@@ -191,6 +156,15 @@ public class FileController {
 
         return "redirect:/user/deletefile";
     }
+
+    /**
+     * 
+     * @param model
+     * @param attributes
+     * @param form
+     * @param bindingResult
+     * @return 検索ページ
+     */
 
     @GetMapping("/filequery")
     public String showInformationPage(Model model, RedirectAttributes attributes,
@@ -230,6 +204,14 @@ public class FileController {
         return "filequery";
     }
 
+    /**
+     * 
+     * @param model
+     * @param attributes
+     * @param form
+     * @param bindingResult
+     * @return ファイル削除ページ
+     */
     @GetMapping("/user/deletefile")
     public String showDeletePage(Model model, RedirectAttributes attributes,
             @ModelAttribute FileQueryForm form, BindingResult bindingResult) {
@@ -266,6 +248,53 @@ public class FileController {
         model.addAttribute("resultSize", fileService.query(form).getFilelist().size());
         model.addAttribute("fileQueryResult", fileService.query(form).getFilelist());
         return "delete";
+    }
+
+    /**
+     * 
+     * @param model
+     * @param attributes
+     * @param form
+     * @param bindingResult
+     * @return 検索ページ
+     */
+
+    @GetMapping("/filequery/{sid}")
+    public String showInformationGidPage(Model model, RedirectAttributes attributes,
+            @ModelAttribute FileQueryForm form, BindingResult bindingResult, @PathVariable("sid") Integer sid) {
+
+        model.addAttribute(new FileQueryForm());
+        List<Genre> genreList = genreService.getAllGenre();
+        model.addAttribute("genreList", genreList);
+        List<Subject> subjectList = subjectService.getAllSubject();
+        model.addAttribute("subjectList", subjectList);
+        List<FileEntity> fileList = fileService.getAllFile();
+        model.addAttribute("fileList", fileList);
+
+        // フォームのバリデーション違反があった場合
+        if (bindingResult.hasErrors()) {
+            // ユーザIDに使用できない文字が含まれていた場合
+            if (bindingResult.getFieldErrors().stream().anyMatch(it -> it.getField().equals("uid"))) {
+                // エラーフラグをオンにする
+                attributes.addFlashAttribute(
+                        "isUidValidationError",
+                        true);
+
+                // 自分自身にリダイレクトする
+                return "redirect:/fileQuery/search";
+            }
+
+            // ユーザIDのみの条件で自分自身にリダイレクトする
+            return "redirect:/fileinformation";
+        }
+        // 空文字をnullに変換
+        if (form.getUid() == "") {
+            form.setUid(null);
+        }
+
+        model.addAttribute("fileQueryResult",fileService.sidQuery(sid).getFilelist());
+        return "filequery";
+
     }
 
 }
