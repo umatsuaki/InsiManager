@@ -18,7 +18,6 @@ import jp.kobe_u.cs27.insiManager.configuration.exception.ValidationException;
 import jp.kobe_u.cs27.insiManager.domain.entity.FileEntity;
 import jp.kobe_u.cs27.insiManager.domain.entity.Genre;
 import jp.kobe_u.cs27.insiManager.domain.entity.Subject;
-import jp.kobe_u.cs27.insiManager.domain.entity.User;
 import jp.kobe_u.cs27.insiManager.domain.service.FileService;
 import jp.kobe_u.cs27.insiManager.domain.service.GenreService;
 import jp.kobe_u.cs27.insiManager.domain.service.SubjectService;
