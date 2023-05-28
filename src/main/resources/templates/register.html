@@ -9,39 +9,51 @@
       type="text/javascript"></script>
   </head>
   <body class="m-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
 
-    
+          <br>
+          <br>
+          <div class="card text-white bg-dark text-center mb-3">
 
-    <h1>ユーザ新規登録</h1>
+            <div class="card-body">
+              <h5 class="card-title">ユーザ新規登録</h5>
 
-    
-    <h2 th:if="${isUserAlreadyExistsError}" class="text-danger">ユーザが登録済みです</h2>
-    <h2 th:if="${isUserFormError}" class="text-danger">ユーザの登録情報が誤っています</h2>
+              <h2 th:if="${isUserAlreadyExistsError}" class="text-danger">ユーザが登録済みです</h2>
+              <h2 th:if="${isUserFormError}" class="text-danger">ユーザの登録情報が誤っています</h2>
 
-    <form method="get" th:action="@{/user/register/confirm}"
-      th:object="${userForm}">
-      <div class="mb-3">
-        <input class="form-control" pattern="[0-9a-zA-Z_\\-]+"
-          placeholder="希望するID"
-          required
-          th:field="*{uid}" type="text">
+              <form method="get" th:action="@{/user/register/confirm}"
+                th:object="${userForm}">
+                <div class="mb-3">
+                  <input class="form-control" pattern="[0-9a-zA-Z_\\-]+"
+                    placeholder="希望するID"
+                    required
+                    th:field="*{uid}" type="text">
+                </div>
+                <div class="mb-3">
+                  <input class="form-control" placeholder="ニックネーム" required
+                    th:field="*{nickname}" type="text">
+                </div>
+                <div class="mb-3">
+                  <input class="form-control" placeholder="Eメールアドレス" required
+                    th:field="*{email}" type="email">
+                </div>
+                <div class="mb-3">
+                  <input class="btn btn-primary" type="submit" value="登録する">
+                </div>
+              </form>
+
+              <form method="get" th:action="@{/}">
+                <input class="btn btn-warning" type="submit" value="やめる">
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-3"></div>
       </div>
-      <div class="mb-3">
-        <input class="form-control" placeholder="ニックネーム" required
-          th:field="*{nickname}" type="text">
-      </div>
-      <div class="mb-3">
-        <input class="form-control" placeholder="Eメールアドレス" required
-          th:field="*{email}" type="email">
-      </div>
-      <div class="mb-3">
-        <input class="btn btn-primary" type="submit" value="登録する">
-      </div>
-    </form>
-
-    <form method="get" th:action="@{/}">
-      <input class="btn btn-warning" type="submit" value="やめる">
-    </form>
-
+    </div>
   </body>
 </html>

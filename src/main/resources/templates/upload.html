@@ -91,10 +91,11 @@
                     </div>
                     <form method="get"
                         th:action="@{/}">
-                        <input class="btn btn-info "
+                        <input class="btn btn-info mb-3 "
                             type="submit"
                             value="ファイル検索に戻る">
                     </form>
+                    <h2 th:if="${isUserDoesNotExistError}" class="text-danger">ユーザが見つかりません<br>ファイルをアップロードできません</h2>
                     <div class="col-3">
                     </div>
                 </div>

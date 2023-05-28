@@ -21,13 +21,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletResponse;
 import jp.kobe_u.cs27.insiManager.application.form.FileForm;
 import jp.kobe_u.cs27.insiManager.application.form.FileQueryForm;
+import jp.kobe_u.cs27.insiManager.configuration.exception.ValidationException;
 import jp.kobe_u.cs27.insiManager.domain.entity.FileEntity;
 import jp.kobe_u.cs27.insiManager.domain.entity.Genre;
 import jp.kobe_u.cs27.insiManager.domain.entity.Subject;
+import jp.kobe_u.cs27.insiManager.domain.entity.User;
 import jp.kobe_u.cs27.insiManager.domain.repository.FileRepository;
 import jp.kobe_u.cs27.insiManager.domain.service.FileService;
 import jp.kobe_u.cs27.insiManager.domain.service.GenreService;
 import jp.kobe_u.cs27.insiManager.domain.service.SubjectService;
+import jp.kobe_u.cs27.insiManager.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -38,6 +41,7 @@ public class FileController {
 
     private final FileService fileService;
     private final FileRepository files;
+    private final UserService service;
     private final SubjectService subjectService;
     private final GenreService genreService;
 
@@ -57,8 +61,26 @@ public class FileController {
             @ModelAttribute @Validated FileForm form,
             BindingResult bindingResult) {
 
+        // ユーザIDを変数に格納する
+        final String uid = form.getUid();
+
+        // ユーザ情報をDBから取得する
+        // ユーザが登録済みかどうかの確認も兼ねている
+        User user;
+        try {
+            user = service.getUser(uid);
+        } catch (ValidationException e) {
+            // エラーフラグをオンにする
+            attributes.addFlashAttribute(
+                    "isUserDoesNotExistError",
+                    true);
+            // 初期ページに戻る
+            return "redirect:/user/addfile";
+        }
+
         // ファイルをデータベースに保存する
         fileService.saveFile(form);
+
         return "redirect:/user/addfile";
     }
 
@@ -191,7 +213,7 @@ public class FileController {
                 return "redirect:/fileQuery/search";
             }
 
-            // ユーザIDのみの条件で自分自身にリダイレクトする
+            //自分自身にリダイレクトする
             return "redirect:/fileinformation";
         }
         // 空文字をnullに変換
@@ -292,7 +314,7 @@ public class FileController {
             form.setUid(null);
         }
 
-        model.addAttribute("fileQueryResult",fileService.sidQuery(sid).getFilelist());
+        model.addAttribute("fileQueryResult", fileService.sidQuery(sid).getFilelist());
         return "filequery";
 
     }
