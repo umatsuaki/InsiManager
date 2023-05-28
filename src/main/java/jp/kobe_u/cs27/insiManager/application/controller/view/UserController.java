@@ -85,7 +85,7 @@ public class UserController {
         nickname);
 
     // ファイル検索ページ
-    return "redirect:/fileinformation";
+    return "redirect:/filequery";
   }
 
   
@@ -203,7 +203,7 @@ public class UserController {
     model.addAttribute(new FileQueryForm());
 
     // ユーザ登録確認ページ
-    return "signup/confirm";
+    return "/filequery";
   }
 
   /**
@@ -320,7 +320,7 @@ public class UserController {
 
 
     // ファイル検索ページ
-    return "fileQuery";
+    return "filequery";
   }
 
   /**

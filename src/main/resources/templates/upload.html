@@ -11,54 +11,93 @@
 
     <body>
         <div class="container text-center">
-            <br>
-            <br>
-            <div class="card">
+            <div class="row">
+                <br>
+                <br>
+                <div class="col-3">
+                </div>
+                <div class="col-6">
+                    <br>
+                    <br>
+                    <div class="card text-dark bg-light mb-3">
 
-                <h2>File Upload Form</h2>
-                <form th:action="@{/user/addfile/add}" th:object="${fileForm}"
-                    method="post" enctype="multipart/form-data">
+                        <form th:action="@{/user/addfile/add}"
+                            th:object="${fileForm}"
+                            method="post" enctype="multipart/form-data">
 
-                    <div class="mb-3">
-                        <label for="uid" class="form-label">User</label>
-                        <input th:field="*{uid}" id="uid" type="text"
-                            placeholder="Enteruid">
+                            <div class="card-header  border-danger mb-3">File
+                                Upload Form</div>
+
+                            <div class="form-group mb-3 ">
+                                <label for="uid" class="form-label"></label>
+                                <input th:field="*{uid}" type="text"
+                                    id="uid" class="form-control"
+                                    placeholder="Enter uid" required>
+                            </div>
+
+                            <select class="form-select mb-3"
+                                th:name="sid"
+                                th:id="sid"
+                                required>
+
+                                <option th:each="sList : ${subjectList}"
+                                    th:value="${sList.sid}"
+                                    th:field="*{sid}"
+                                    th:text="${sList.subjectName}" />
+                            </select>
+
+                            <select class="form-select mb-3" th:name="gid"
+                                th:id="gid"
+                                required>
+                                <option th:each="gList : ${genreList}"
+                                    th:value="${gList.gid}" th:field="*{gid}"
+                                    th:text="${gList.genreName}" />
+                            </select>
+
+                            <select class="form-select mb-5" th:name="year"
+                                th:id="year"
+                                required>
+                                <option
+                                    th:each="i : ${#numbers.sequence(2001, 2050)}"
+                                    th:value="${i}" th:field="*{year}"
+                                    th:text="${i}+年度" />
+                            </select>
+
+                            <div>
+                                <div class="form-group mb-3">
+                                    <label for="data"> </label>
+                                    <input type="file" class="form-control-file"
+                                        id="data"
+                                        th:field="*{data}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="comment" class="form-label"></label>
+                                <input th:field="*{comment}"
+                                    class="form-control"
+                                    aria-describedby="commentHelp"
+                                    placeholder="Enter comment" id="comment"
+                                    type="text">
+                                <small id="commentHelp"
+                                    class="form-text text-muted">ファイルの説明を入力してください</small>
+                            </div>
+
+                            <div>
+                                <button type="submit" class="btn btn-dark mb-3">Upload</button>
+                            </div>
+                        </form>
+
                     </div>
-
-                    <select class="form-select mb-3" th:name="sid" th:id="sid"
-                        required>
-                        <option th:each="sList : ${subjectList}"
-                            th:value="${sList.sid}" th:field="*{sid}"
-                            th:text="${sList.subjectName}" />
-                    </select>
-
-                    <select class="form-select mb-3" th:name="gid" th:id="gid"
-                        required>
-                        <option th:each="gList : ${genreList}"
-                            th:value="${gList.gid}" th:field="*{gid}"
-                            th:text="${gList.genreName}" />
-                    </select>
-
-                    <select class="form-select mb-3" th:name="year" th:id="year"
-                        required>
-                        <option th:each="i : ${#numbers.sequence(1980, 2050)}"
-                            th:value="${i}" th:field="*{year}" th:text="${i}+年度" />
-                    </select>
-
-                    <div>
-                        <label for="data">File:</label>
-                        <input type="file" id="data" th:field="*{data}">
+                    <form method="get"
+                        th:action="@{/filequery}">
+                        <input class="btn btn-info "
+                            type="submit"
+                            value="ファイル検索に戻る">
+                    </form>
+                    <div class="col-3">
                     </div>
-
-                    <div class="form-group mb-3">
-                        <label class="custom-user-label" for="comment">Comment</label>
-                        <input th:field="*{comment}" type="text">
-                    </div>
-
-                    <div>
-                        <button type="submit">Upload</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </body>

@@ -219,7 +219,7 @@ public class FileService {
      *
      * @param fid ファイルID
      */
-    public void deleteFile(long fid) {
+    public void deleteFile(Long fid) {
 
         // ファイルが存在しない場合、例外を投げる
         if (!files.existsById(fid)) {

@@ -7,7 +7,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import jp.kobe_u.cs27.insiManager.application.form.FileForm;
-import jp.kobe_u.cs27.insiManager.application.form.FileQueryForm;
 import jp.kobe_u.cs27.insiManager.application.form.UserForm;
 import jp.kobe_u.cs27.insiManager.domain.service.*;
 import jp.kobe_u.cs27.insiManager.domain.entity.*;
@@ -34,19 +33,6 @@ public class PageController {
 
     return "register";
   }
-
-  @GetMapping("/fileQuery")
-  public String showConditionInputPage(Model model){
-
-    // HealthConditionFormをModelに追加する(Thymeleaf上ではhealthConditionForm)
-    model.addAttribute(new FileQueryForm());
-    List<Genre> genreList = genreService.getAllGenre();
-    model.addAttribute("genreList",genreList);
-    List<Subject> subjectList = subjectService.getAllSubject();
-    model.addAttribute("subjectList", subjectList);
-    return "fileQuery";
-  }
-
  
 
   @GetMapping("/user/addfile")
