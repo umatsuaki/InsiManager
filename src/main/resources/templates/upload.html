@@ -96,8 +96,64 @@
                             value="ファイル検索に戻る">
                     </form>
                     <h2 th:if="${isUserDoesNotExistError}" class="text-danger">ユーザが見つかりません<br>ファイルをアップロードできません</h2>
-                    <div class="col-3">
-                    </div>
+
+                </div>
+                <div class="col-3">
+                    <br>
+                    <br>
+
+                    <table
+                        id="container"
+                        class="table mb-3 text-center table-success table-bordered table-striped">
+                        <thead class="table-dark">
+                            <th>最新のファイルリスト</th>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(0).fid}, fileName=${fileList.get(0).fileName})}"
+                                        th:text="${fileList.get(0).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(1).fid}, fileName=${fileList.get(1).fileName})}"
+                                        th:text="${fileList.get(1).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(2).fid}, fileName=${fileList.get(2).fileName})}"
+                                        th:text="${fileList.get(2).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(3).fid}, fileName=${fileList.get(3).fileName})}"
+                                        th:text="${fileList.get(3).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(4).fid}, fileName=${fileList.get(4).fileName})}"
+                                        th:text="${fileList.get(4).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
                 </div>
             </div>
         </div>

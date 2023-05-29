@@ -2,6 +2,7 @@ package jp.kobe_u.cs27.insiManager.application.controller.view;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,9 +25,19 @@ public class PageController {
   private final SubjectService subjectService;
   private final GenreService genreService;
 
+  /**
+   * ファイル検索ページを表示する 
+   * 
+   * @param model
+   * @param attributes
+   * @param form
+   * @param bindingResult
+   * @return ファイル検索ページ
+   */
+
   @GetMapping("/")
   public String showDeletePage(Model model, RedirectAttributes attributes,
-      @ModelAttribute FileQueryForm form, BindingResult bindingResult) {
+      @ModelAttribute FileQueryForm form, BindingResult bindingResult,Pageable pageable) {
 
     model.addAttribute(new FileQueryForm());
     List<Genre> genreList = genreService.getAllGenre();
@@ -35,6 +46,7 @@ public class PageController {
     model.addAttribute("subjectList", subjectList);
     List<FileEntity> fileList = fileService.getAllFile();
     model.addAttribute("fileList", fileList);
+
 
     // フォームのバリデーション違反があった場合
     if (bindingResult.hasErrors()) {
@@ -57,10 +69,16 @@ public class PageController {
       form.setUid(null);
     }
 
-    model.addAttribute("resultSize", fileService.query(form).getFilelist().size());
-    model.addAttribute("fileQueryResult", fileService.query(form).getFilelist());
+    model.addAttribute("fileQueryResult", fileService.query(form,pageable).getFilePage());
     return "index";
   }
+
+  /**
+   * ユーザ登録ページを表示する
+   * 
+   * @param model
+   * @return ユーザ登録ページ
+   */
 
   @GetMapping("/user/signup")
   public String showUserRegistrationPage(Model model) {
@@ -70,6 +88,13 @@ public class PageController {
 
     return "register";
   }
+
+  /**
+   * ファイル追加ページを表示する
+   * 
+   * @param model
+   * @return ファイル追加ページ
+   */
 
   @GetMapping("/user/addfile")
   public String showUploadFilePage(Model model) {
