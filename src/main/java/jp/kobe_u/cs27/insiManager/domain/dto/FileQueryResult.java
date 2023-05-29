@@ -3,7 +3,8 @@ package jp.kobe_u.cs27.insiManager.domain.dto;
 import jp.kobe_u.cs27.insiManager.domain.entity.*;
 import lombok.Data;
 
-import java.util.List;
+
+import org.springframework.data.domain.Page;
 
 @Data
 public class FileQueryResult {
@@ -21,6 +22,6 @@ public class FileQueryResult {
     private final Integer  gid;
 
     //検索結果のリスト
-    private final List<FileEntity> filelist;
+    private final Page<FileEntity> filePage;
 
 }

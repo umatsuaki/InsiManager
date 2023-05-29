@@ -2,12 +2,12 @@ package jp.kobe_u.cs27.insiManager.application.controller.view;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.kobe_u.cs27.insiManager.application.form.FileForm;
@@ -37,7 +37,7 @@ public class PageController {
 
   @GetMapping("/")
   public String showDeletePage(Model model, RedirectAttributes attributes,
-      @ModelAttribute FileQueryForm form, BindingResult bindingResult) {
+      @ModelAttribute FileQueryForm form, BindingResult bindingResult,Pageable pageable) {
 
     model.addAttribute(new FileQueryForm());
     List<Genre> genreList = genreService.getAllGenre();
@@ -69,8 +69,7 @@ public class PageController {
       form.setUid(null);
     }
 
-    model.addAttribute("resultSize", fileService.query(form).getFilelist().size());
-    model.addAttribute("fileQueryResult", fileService.query(form).getFilelist());
+    model.addAttribute("fileQueryResult", fileService.query(form,pageable).getFilePage());
     return "index";
   }
 

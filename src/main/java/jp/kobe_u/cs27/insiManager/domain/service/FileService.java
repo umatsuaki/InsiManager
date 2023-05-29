@@ -3,6 +3,9 @@ package jp.kobe_u.cs27.insiManager.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +34,6 @@ import static jp.kobe_u.cs27.insiManager.configuration.exception.ErrorCode.*;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,8 +67,6 @@ public class FileService {
             Subject subject = subjects.getReferenceById(form.getSid());
             int year = form.getYear();
             String comment = form.getComment();
-
-            
 
             // ファイルデータを取得
             MultipartFile multipartFile = form.getData();
@@ -190,26 +190,26 @@ public class FileService {
      * ファイルをユーザ、教科、年度、ジャンル、キーワードで検索する
      */
 
-    public FileQueryResult query(FileQueryForm form) {
+    public FileQueryResult query(FileQueryForm form, Pageable pageable) {
         // フォームの中身を変数に格納する
         final Integer sid = form.getSid();
         final Integer gid = form.getGid();
         final Integer year = form.getYear();
         final String uid = form.getUid();
 
-        List<FileEntity> fileList = new ArrayList<>();
-
         Sort sort = Sort.by(
                 Sort.Order.desc("year"),
                 Sort.Order.asc("subject.sid"),
                 Sort.Order.asc("genre.gid"));
 
-        fileList = files.findAll(Specification
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        Page<FileEntity> filePage = files.findAll(Specification
                 .where(FileRepository.sidEquals(sid))
                 .and(FileRepository.gidEquals(gid))
                 .and(FileRepository.yearEquals(year))
                 .and(FileRepository.uidEquals(uid)),
-                sort);
+                pageable);
 
         // 検索結果を返す
         return new FileQueryResult(
@@ -217,30 +217,29 @@ public class FileService {
                 sid,
                 year,
                 gid,
-                fileList);
+                filePage);
     }
 
     /**
      * ファイルを教科で検索する
      */
 
-     public FileQueryResult sidQuery(Integer sid) {
+    public FileQueryResult sidQuery(Integer sid, Pageable pageable) {
         // フォームの中身を変数に格納する
-        
-
-        List<FileEntity> fileList = new ArrayList<>();
 
         Sort sort = Sort.by(
                 Sort.Order.desc("year"),
                 Sort.Order.asc("subject.sid"),
                 Sort.Order.asc("genre.gid"));
 
-        fileList = files.findAll(Specification
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        Page<FileEntity> filePage = files.findAll(Specification
                 .where(FileRepository.sidEquals(sid))
                 .and(FileRepository.gidEquals(null))
                 .and(FileRepository.yearEquals(null))
                 .and(FileRepository.uidEquals(null)),
-                sort);
+                pageable);
 
         // 検索結果を返す
         return new FileQueryResult(
@@ -248,9 +247,8 @@ public class FileService {
                 sid,
                 null,
                 null,
-                fileList);
+                filePage);
     }
-
 
     /**
      * ファイルを削除する
