@@ -331,10 +331,10 @@ public class FileController {
         }
 
         Page<FileEntity> filePage = fileService.query(form, pageable).getFilePage();
-        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage, "/filequery/{sid}");
+        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage, "/filequery/" + sid);
         model.addAttribute("page", page);
         model.addAttribute("fileQueryResult", filePage.getContent());
-        model.addAttribute("url", "/filequery/{sid}");
+        model.addAttribute("url", "/filequery/" + sid);
 
         return "filequery";
 
