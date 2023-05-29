@@ -27,6 +27,7 @@ public class PageController {
 
   /**
    * ファイル検索ページを表示する
+   * 
    * @param model
    * @param attributes
    * @param form
@@ -74,6 +75,7 @@ public class PageController {
 
   /**
    * ユーザ登録ページを表示する
+   * 
    * @param model
    * @return ユーザ登録ページ
    */
@@ -87,7 +89,8 @@ public class PageController {
     return "register";
   }
 
-  /**ファイル追加ページを表示する
+  /**
+   * ファイル追加ページを表示する
    * 
    * @param model
    * @return ファイル追加ページ
@@ -105,7 +108,5 @@ public class PageController {
     model.addAttribute("fileList", fileList);
     return "upload";
   }
-
-  
 
 }

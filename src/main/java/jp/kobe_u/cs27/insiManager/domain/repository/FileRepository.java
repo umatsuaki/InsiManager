@@ -52,7 +52,7 @@ public interface FileRepository
   void deleteByGenre(Genre genre);
 
   /**
-    * すべての投稿を投稿日順に取得
+    * すべてのファイルをアップロード日順に取得
     */
     List<FileEntity> findAllByOrderByRecordedOnDesc();
 
