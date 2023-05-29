@@ -6,6 +6,7 @@ import java.sql.Blob;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -191,8 +192,9 @@ public class FileController {
 
     @GetMapping("/filequery")
     public String showInformationPage(Model model, RedirectAttributes attributes,
-            @ModelAttribute FileQueryForm form, BindingResult bindingResult) {
+            @ModelAttribute FileQueryForm form, BindingResult bindingResult, Pageable pageable) {
 
+        
         model.addAttribute(new FileQueryForm());
         List<Genre> genreList = genreService.getAllGenre();
         model.addAttribute("genreList", genreList);

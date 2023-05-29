@@ -26,7 +26,7 @@ public class PageController {
   private final GenreService genreService;
 
   /**
-   * ファイル検索ページを表示する
+   * ファイル検索ページを表示する 
    * 
    * @param model
    * @param attributes
@@ -46,6 +46,7 @@ public class PageController {
     model.addAttribute("subjectList", subjectList);
     List<FileEntity> fileList = fileService.getAllFile();
     model.addAttribute("fileList", fileList);
+
 
     // フォームのバリデーション違反があった場合
     if (bindingResult.hasErrors()) {
