@@ -163,6 +163,7 @@ public class FileController {
     }
 
     /**
+     * ファイルIDを受け取ってファイルを削除する
      * 
      * @param id
      * @return ファイル削除ページ

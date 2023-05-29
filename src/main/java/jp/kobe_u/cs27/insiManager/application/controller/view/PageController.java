@@ -26,7 +26,7 @@ public class PageController {
   private final GenreService genreService;
 
   /**
-   * 
+   * ファイル検索ページを表示する
    * @param model
    * @param attributes
    * @param form
@@ -73,7 +73,7 @@ public class PageController {
   }
 
   /**
-   * 
+   * ユーザ登録ページを表示する
    * @param model
    * @return ユーザ登録ページ
    */
@@ -87,7 +87,7 @@ public class PageController {
     return "register";
   }
 
-  /**
+  /**ファイル追加ページを表示する
    * 
    * @param model
    * @return ファイル追加ページ
