@@ -6,6 +6,8 @@ import java.sql.Blob;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jp.kobe_u.cs27.insiManager.application.form.FileForm;
 import jp.kobe_u.cs27.insiManager.application.form.FileQueryForm;
 import jp.kobe_u.cs27.insiManager.configuration.exception.ValidationException;
+import jp.kobe_u.cs27.insiManager.domain.PageWrapper;
 import jp.kobe_u.cs27.insiManager.domain.entity.FileEntity;
 import jp.kobe_u.cs27.insiManager.domain.entity.Genre;
 import jp.kobe_u.cs27.insiManager.domain.entity.Subject;
@@ -181,6 +184,7 @@ public class FileController {
     }
 
     /**
+     * ファイルを検索する
      * 
      * @param model
      * @param attributes
@@ -191,7 +195,7 @@ public class FileController {
 
     @GetMapping("/filequery")
     public String showInformationPage(Model model, RedirectAttributes attributes,
-            @ModelAttribute FileQueryForm form, BindingResult bindingResult) {
+            @ModelAttribute FileQueryForm form, BindingResult bindingResult, Pageable pageable) {
 
         model.addAttribute(new FileQueryForm());
         List<Genre> genreList = genreService.getAllGenre();
@@ -222,12 +226,17 @@ public class FileController {
             form.setUid(null);
         }
 
-        model.addAttribute("resultSize", fileService.query(form).getFilelist().size());
-        model.addAttribute("fileQueryResult", fileService.query(form).getFilelist());
+        Page<FileEntity> filePage = fileService.query(form, pageable).getFilePage();
+        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage, "/filequery");
+        model.addAttribute("page", page);
+        model.addAttribute("fileQueryResult", filePage.getContent());
+        model.addAttribute("url", "/filequery");
+
         return "filequery";
     }
 
     /**
+     * ファイルを削除するページを表示する
      * 
      * @param model
      * @param attributes
@@ -237,7 +246,7 @@ public class FileController {
      */
     @GetMapping("/user/deletefile")
     public String showDeletePage(Model model, RedirectAttributes attributes,
-            @ModelAttribute FileQueryForm form, BindingResult bindingResult) {
+            @ModelAttribute FileQueryForm form, BindingResult bindingResult, Pageable pageable) {
 
         model.addAttribute(new FileQueryForm());
         List<Genre> genreList = genreService.getAllGenre();
@@ -268,12 +277,17 @@ public class FileController {
             form.setUid(null);
         }
 
-        model.addAttribute("resultSize", fileService.query(form).getFilelist().size());
-        model.addAttribute("fileQueryResult", fileService.query(form).getFilelist());
+        Page<FileEntity> filePage = fileService.query(form, pageable).getFilePage();
+        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage, "/user/deletefile");
+        model.addAttribute("page", page);
+        model.addAttribute("fileQueryResult", filePage.getContent());
+        model.addAttribute("url", "/user/deletefile");
+
         return "delete";
     }
 
     /**
+     * 教科IDでファイルを検索する
      * 
      * @param model
      * @param attributes
@@ -284,7 +298,8 @@ public class FileController {
 
     @GetMapping("/filequery/{sid}")
     public String showInformationGidPage(Model model, RedirectAttributes attributes,
-            @ModelAttribute FileQueryForm form, BindingResult bindingResult, @PathVariable("sid") Integer sid) {
+            @ModelAttribute FileQueryForm form, BindingResult bindingResult, @PathVariable("sid") Integer sid,
+            Pageable pageable) {
 
         model.addAttribute(new FileQueryForm());
         List<Genre> genreList = genreService.getAllGenre();
@@ -315,7 +330,12 @@ public class FileController {
             form.setUid(null);
         }
 
-        model.addAttribute("fileQueryResult", fileService.sidQuery(sid).getFilelist());
+        Page<FileEntity> filePage = fileService.query(form, pageable).getFilePage();
+        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage, "/filequery/" + sid);
+        model.addAttribute("page", page);
+        model.addAttribute("fileQueryResult", filePage.getContent());
+        model.addAttribute("url", "/filequery/" + sid);
+
         return "filequery";
 
     }

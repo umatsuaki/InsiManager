@@ -2,6 +2,7 @@ package jp.kobe_u.cs27.insiManager.application.controller.view;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -110,7 +111,7 @@ public class UserController {
       RedirectAttributes attributes,
       @ModelAttribute @Validated UserForm userform,
       @ModelAttribute FileQueryForm fileform,
-      BindingResult bindingResult) {
+      BindingResult bindingResult,Pageable pageable) {
 
     // フォームにバリデーション違反があった場合
     if (bindingResult.hasErrors()) {
@@ -144,8 +145,7 @@ public class UserController {
     model.addAttribute("subjectList", subjectList);
     List<FileEntity> fileList = fileService.getAllFile();
     model.addAttribute("fileList", fileList);
-    model.addAttribute("resultSize", fileService.query(fileform).getFilelist().size());
-    model.addAttribute("fileQueryResult", fileService.query(fileform).getFilelist());
+    model.addAttribute("fileQueryResult", fileService.query(fileform,pageable).getFilePage());
 
     // ファイル検索ページ
     return "redirect:/";

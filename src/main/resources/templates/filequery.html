@@ -32,12 +32,68 @@
                                             th:href="@{/preview/{fileName}(id=${fileEntity.fid}, fileName=${fileEntity.fileName})}"
                                             th:text="${fileEntity.fileName}"
                                             target="_blank">PDFプレビュー</a>
+
                                     </td>
                                 </tr>
 
                             </tbody>
 
                         </table>
+
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li
+                                    th:class="${page.firstPage} ? 'page-item disabled' : 'page-item'">
+                                    <a class="page-link"
+                                        th:if="${not page.firstPage}"
+                                        th:href="@{${page.url}(page=0, size=${page.size})}"
+                                        tabindex="-1" aria-disabled="true">←先頭</a>
+                                    <span class="page-link" href="#"
+                                        tabindex="-1" aria-disabled="true"
+                                        th:if="${page.firstPage}">←先頭</span>
+                                </li>
+                                <li
+                                    th:class="${page.hasPreviousPage} ? 'page-item' : 'page-item disabled'">
+                                    <a class="page-link"
+                                        th:if="${page.hasPreviousPage}"
+                                        th:href="@{${page.url}(page=${page.number-2}, size=${page.size})}">«</a>
+                                    <span class="page-link" href="#"
+                                        tabindex="-1" aria-disabled="true"
+                                        th:if="${not page.hasPreviousPage}">«</span>
+                                </li>
+                                <li th:each="item : ${page.items}"
+                                    th:class="${item.current} ? 'page-item active' : 'page-item'">
+                                    <a class="page-link"
+                                        th:if="${not item.current}"
+                                        th:href="@{${page.url}(page=${item.number-1}, size=${page.size})}">
+                                        <span
+                                            th:text="${item.number}"></span>
+                                    </a>
+                                    <span class="page-link" href="#"
+                                        tabindex="-1" aria-disabled="true"
+                                        th:if="${item.current}"
+                                        th:text="${item.number}"></span>
+                                </li>
+                                <li
+                                    th:class="${page.hasNextPage} ? 'page-item' : 'page-item disabled'">
+                                    <a class="page-link"
+                                        th:if="${page.hasNextPage}"
+                                        th:href="@{${page.url}(page=${page.number}, size=${page.size})}">»</a>
+                                    <span class="page-link" href="#"
+                                        tabindex="-1" aria-disabled="true"
+                                        th:if="${not page.hasNextPage}">»</span>
+                                </li>
+                                <li
+                                    th:class="${page.lastPage} ? 'page-item disabled' : 'page-item'">
+                                    <a class="page-link"
+                                        th:if="${not page.lastPage}"
+                                        th:href="@{${page.url}(page=${page.totalPages - 1}, size=${page.size})}">末尾➝</a>
+                                    <span class="page-link" href="#"
+                                        tabindex="-1" aria-disabled="true"
+                                        th:if="${page.lastPage}">末尾➝</span>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
 
@@ -124,6 +180,16 @@
                                             type="submit"
                                             value="ファイル追加">
                                     </form>
+
+                                    <br>
+
+                                    <form method="get"
+                                        th:action="@{/}">
+                                        <input class="btn btn-info "
+                                            type="submit"
+                                            value="最初のページに戻る">
+                                    </form>
+
                                 </div>
 
                                 <div class="col mb-3">
