@@ -215,22 +215,103 @@ public class FileController {
                         true);
 
                 // 自分自身にリダイレクトする
-                return "redirect:/fileQuery/search";
+                return "redirect:/filequery";
             }
 
             // 自分自身にリダイレクトする
-            return "redirect:/fileinformation";
+            return "redirect:/filequery";
         }
-        // 空文字をnullに変換
-        if (form.getUid() == "") {
-            form.setUid(null);
+
+        String uid = form.getUid();
+        if (uid.equals("")) {
+            uid = "null";
+        }
+        Integer sid = form.getSid();
+        if (sid == null) {
+            sid = -1;
+        }
+        Integer gid = form.getGid();
+        if (gid == null) {
+            gid = -1;
+        }
+        Integer year = form.getYear();
+        if (year == null) {
+            year = -1;
+        }
+
+        return "redirect:/filequery/" + uid + "/" + sid + "/" + gid + "/" + year;
+    }
+
+    @GetMapping("/filequery/{uid}/{sid}/{gid}/{year}")
+    public String showFileInformationPage(Model model, RedirectAttributes attributes,
+            @ModelAttribute FileQueryForm form, BindingResult bindingResult, Pageable pageable,
+            @PathVariable("uid") String uid, @PathVariable("sid") Integer sid, @PathVariable("gid") Integer gid,
+            @PathVariable("year") Integer year) {
+
+        if (uid.equals("null")) {
+            uid = null;
+        }
+        if (sid == -1) {
+            sid = null;
+        }
+        if (gid == -1) {
+            gid = null;
+        }
+        if (year == -1) {
+            year = null;
+        }
+
+        model.addAttribute(new FileQueryForm());
+        form.setUid(uid);
+        form.setSid(sid);
+        form.setGid(gid);
+        form.setYear(year);
+
+        List<Genre> genreList = genreService.getAllGenre();
+        model.addAttribute("genreList", genreList);
+        List<Subject> subjectList = subjectService.getAllSubject();
+        model.addAttribute("subjectList", subjectList);
+        List<FileEntity> fileList = fileService.getAllFile();
+        model.addAttribute("fileList", fileList);
+
+        // フォームのバリデーション違反があった場合
+        if (bindingResult.hasErrors()) {
+            // ユーザIDに使用できない文字が含まれていた場合
+            if (bindingResult.getFieldErrors().stream().anyMatch(it -> it.getField().equals("uid"))) {
+                // エラーフラグをオンにする
+                attributes.addFlashAttribute(
+                        "isUidValidationError",
+                        true);
+
+                // 自分自身にリダイレクトする
+                return "redirect:/filequery";
+            }
+
+            // 自分自身にリダイレクトする
+            return "redirect:/filequery";
         }
 
         Page<FileEntity> filePage = fileService.query(form, pageable).getFilePage();
-        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage, "/filequery");
+
+        if (uid == "") {
+            uid = "null";
+        }
+        if (sid == null) {
+            sid = -1;
+        }
+
+        if (gid == null) {
+            gid = -1;
+        }
+
+        if (year == null) {
+            year = -1;
+        }
+        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage,
+                "/filequery/" + uid + "/" + sid + "/" + gid + "/" + year);
         model.addAttribute("page", page);
         model.addAttribute("fileQueryResult", filePage.getContent());
-        model.addAttribute("url", "/filequery");
+        model.addAttribute("url", "/filequery/" + uid + "/" + sid + "/" + gid + "/" + year);
 
         return "filequery";
     }
@@ -272,16 +353,111 @@ public class FileController {
             // ユーザIDのみの条件で自分自身にリダイレクトする
             return "redirect:/user/deletefile";
         }
-        // 空文字をnullに変換
-        if (form.getUid() == "") {
-            form.setUid(null);
+
+        String uid;
+
+        if (form.getUid() == null) {
+            uid = "null";
+        } else {
+            uid = form.getUid();
+            if (uid.equals("")) {
+                uid = "null";
+            }
+        }
+        Integer sid = form.getSid();
+        if (sid == null) {
+            sid = -1;
+        }
+        Integer gid = form.getGid();
+        if (gid == null) {
+            gid = -1;
+        }
+        Integer year = form.getYear();
+        if (year == null) {
+            year = -1;
         }
 
+        return "redirect:/user/deletefile/" + uid + "/" + sid + "/" + gid + "/" + year;
+
+    }
+
+    /**
+     * ファイルを削除するページを表示する
+     * 
+     * @param model
+     * @param attributes
+     * @param form
+     * @param bindingResult
+     * @return ファイル削除ページ
+     */
+    @GetMapping("/user/deletefile/{uid}/{sid}/{gid}/{year}")
+    public String showFileDeletePage(Model model, RedirectAttributes attributes,
+            @ModelAttribute FileQueryForm form, BindingResult bindingResult, Pageable pageable,
+            @PathVariable("uid") String uid, @PathVariable("sid") Integer sid, @PathVariable("gid") Integer gid,
+            @PathVariable("year") Integer year) {
+
+        if (uid.equals("null")) {
+            uid = null;
+        }
+        if (sid == -1) {
+            sid = null;
+        }
+        if (gid == -1) {
+            gid = null;
+        }
+        if (year == -1) {
+            year = null;
+        }
+
+        model.addAttribute(new FileQueryForm());
+        form.setUid(uid);
+        form.setSid(sid);
+        form.setGid(gid);
+        form.setYear(year);
+
+        List<Genre> genreList = genreService.getAllGenre();
+        model.addAttribute("genreList", genreList);
+        List<Subject> subjectList = subjectService.getAllSubject();
+        model.addAttribute("subjectList", subjectList);
+        List<FileEntity> fileList = fileService.getAllFile();
+        model.addAttribute("fileList", fileList);
+
+        // フォームのバリデーション違反があった場合
+        if (bindingResult.hasErrors()) {
+            // ユーザIDに使用できない文字が含まれていた場合
+            if (bindingResult.getFieldErrors().stream().anyMatch(it -> it.getField().equals("uid"))) {
+                // エラーフラグをオンにする
+                attributes.addFlashAttribute(
+                        "isUidValidationError",
+                        true);
+
+                // 自分自身にリダイレクトする
+                return "redirect:/user/deletefile";
+            }
+
+            // ユーザIDのみの条件で自分自身にリダイレクトする
+            return "redirect:/user/deletefile";
+        }
+        if (uid == "" || uid == null) {
+            uid = "null";
+        }
+        if (sid == null) {
+            sid = -1;
+        }
+
+        if (gid == null) {
+            gid = -1;
+        }
+
+        if (year == null) {
+            year = -1;
+        }
         Page<FileEntity> filePage = fileService.query(form, pageable).getFilePage();
-        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage, "/user/deletefile");
+        PageWrapper<FileEntity> page = new PageWrapper<FileEntity>(filePage,
+                "/user/deletefile/" + uid + "/" + sid + "/" + gid + "/" + year);
         model.addAttribute("page", page);
         model.addAttribute("fileQueryResult", filePage.getContent());
-        model.addAttribute("url", "/user/deletefile");
+        model.addAttribute("url", "/user/deletefile/" + uid + "/" + sid + "/" + gid + "/" + year);
 
         return "delete";
     }
