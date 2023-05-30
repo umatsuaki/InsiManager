@@ -222,9 +222,15 @@ public class FileController {
             return "redirect:/filequery";
         }
 
-        String uid = form.getUid();
-        if (uid.equals("")) {
+        String uid;
+
+        if (form.getUid() == null) {
             uid = "null";
+        } else {
+            uid = form.getUid();
+            if (uid.equals("")) {
+                uid = "null";
+            }
         }
         Integer sid = form.getSid();
         if (sid == null) {
