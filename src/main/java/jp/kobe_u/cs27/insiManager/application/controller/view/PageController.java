@@ -6,15 +6,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.kobe_u.cs27.insiManager.application.form.FileForm;
 import jp.kobe_u.cs27.insiManager.application.form.FileQueryForm;
+import jp.kobe_u.cs27.insiManager.application.form.PasswordForm;
 import jp.kobe_u.cs27.insiManager.application.form.UserForm;
-import jp.kobe_u.cs27.insiManager.domain.service.*;
-import jp.kobe_u.cs27.insiManager.domain.entity.*;
+import jp.kobe_u.cs27.insiManager.domain.entity.FileEntity;
+import jp.kobe_u.cs27.insiManager.domain.entity.Genre;
+import jp.kobe_u.cs27.insiManager.domain.entity.Subject;
+import jp.kobe_u.cs27.insiManager.domain.service.FileService;
+import jp.kobe_u.cs27.insiManager.domain.service.GenreService;
+import jp.kobe_u.cs27.insiManager.domain.service.SubjectService;
 import lombok.AllArgsConstructor;
 
 @Controller
@@ -26,7 +34,7 @@ public class PageController {
   private final GenreService genreService;
 
   /**
-   * ファイル検索ページを表示する 
+   * ファイル検索ページを表示する
    * 
    * @param model
    * @param attributes
@@ -37,7 +45,7 @@ public class PageController {
 
   @GetMapping("/")
   public String showDeletePage(Model model, RedirectAttributes attributes,
-      @ModelAttribute FileQueryForm form, BindingResult bindingResult,Pageable pageable) {
+      @ModelAttribute FileQueryForm form, BindingResult bindingResult, Pageable pageable) {
 
     model.addAttribute(new FileQueryForm());
     List<Genre> genreList = genreService.getAllGenre();
@@ -46,7 +54,6 @@ public class PageController {
     model.addAttribute("subjectList", subjectList);
     List<FileEntity> fileList = fileService.getAllFile();
     model.addAttribute("fileList", fileList);
-
 
     // フォームのバリデーション違反があった場合
     if (bindingResult.hasErrors()) {
@@ -69,7 +76,7 @@ public class PageController {
       form.setUid(null);
     }
 
-    model.addAttribute("fileQueryResult", fileService.query(form,pageable).getFilePage());
+    model.addAttribute("fileQueryResult", fileService.query(form, pageable).getFilePage());
     return "index";
   }
 
@@ -107,6 +114,22 @@ public class PageController {
     List<FileEntity> fileList = fileService.getAllFile();
     model.addAttribute("fileList", fileList);
     return "upload";
+  }
+
+  @PostMapping("delete/confirm/{fid}")
+  public String submitPassword(PasswordForm form, Model model, RedirectAttributes attributes, @PathVariable long fid,
+      BindingResult bindingResult) {
+    String password = form.getPassword();
+
+    if (bindingResult.hasErrors()) {
+      return "redirect:getfid/" + fid;
+    }
+    if (!password.equals("insipassword")) {
+      attributes.addFlashAttribute("isPasswordIncorrect", true);
+      return "redirect:/getfid/" + fid;
+    }
+    return "redirect:/delete/" + fid;
+
   }
 
 }

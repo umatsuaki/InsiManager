@@ -20,26 +20,59 @@
 
                     <h5 class=text-center>ファイル削除確認</h5>
 
-                    <table class="table text-dark text-center mb-3 ">
-                        <tbody>
-                            <tr>
-                                <th scope="row">ファイル名</th>
-                                <td>[[${fileName}]]</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">追加人物</th>
-                                <td>[[${user}]]</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">追加時刻</th>
-                                <td>[[${addedTime}]]</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <form method="post"
+                        th:action="@{/delete/confirm/{fid} (fid = ${fid})}"
+                        th:object="${passwordForm}"
+                        class="mb-3">
 
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-3"></div>
+                        <table class="table text-dark text-center mb-3 ">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">ファイル名</th>
+                                    <td>[[${fileName}]]</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">追加人物</th>
+                                    <td>[[${user}]]</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">追加時刻</th>
+                                    <td>[[${addedTime}]]</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">パスワード</th>
+                                    <td>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class = "col-4"></div>
+                                        <div class = "col">
+                                        <label for="text" class="form-label"></label>
+                                        <input type="password" id="text"
+                                            th:field="*{password}"
+                                            class="form-control mb-3" 
+                                            required
+                                            placeholder="Enter password" />
+                                        </div>
+                                        <div class = "col-2"></div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <br>
+
+                        <div class="container">
+                            <div class="row">
+                                <div class="col"></div>
+                                <div class="col">
+                                    <input type="submit"
+                                        class="btn btn-danger "
+                                        value="削除する">
+                                </div>
+                            </form>
                             <div class="col">
                                 <form method="get"
                                     th:action="@{/user/deletefile}">
@@ -47,24 +80,24 @@
                                         class="btn btn-primary mb-3"
                                         value="やめる">
                                 </form>
-
                             </div>
-                            <div class="col">
-                                <form method="post"
-                                    th:action="@{/delete/{id} (id=${fid})}"
-                                    class="mb-3">
-                                    <input type="submit"
-                                        class="btn btn-danger "
-                                        value="削除する">
-                                </form>
-
-                                <div class="col-2"></div>
+                            </div>
+                        </div>
+                        <div class = "container">
+                            <div class = "row">
+                                <div class = "col-4"></div>
+                                <div class = "col">
+                        <h2 th:if="${isPasswordIncorrect}"
+                                    class="text-danger">パスワードが正しくありません</h2>
+                                </div>
+                            </div>
+                        </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </body>
 </html>

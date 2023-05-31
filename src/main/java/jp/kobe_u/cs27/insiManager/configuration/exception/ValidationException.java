@@ -14,7 +14,7 @@ public class ValidationException extends RuntimeException {
   /**
    * 例外を生成するコンストラクタ
    *
-   * @param code エラーコード
+   * @param code  エラーコード
    * @param error 発生したエラーの内容を説明する文字列
    * @param cause 発生したエラーの原因を説明する文字列
    */
@@ -32,4 +32,3 @@ public class ValidationException extends RuntimeException {
   }
 
 }
-
