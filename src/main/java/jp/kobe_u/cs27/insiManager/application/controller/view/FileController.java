@@ -480,7 +480,7 @@ public class FileController {
      */
 
     @GetMapping("/filequery/{sid}")
-    public String showInformationGidPage(Model model, RedirectAttributes attributes,
+    public String showInformationSidPage(Model model, RedirectAttributes attributes,
             @ModelAttribute FileQueryForm form, BindingResult bindingResult, @PathVariable("sid") Integer sid,
             Pageable pageable) {
 
@@ -536,8 +536,7 @@ public class FileController {
             @PathVariable("fid") long fid,
             Model model,
             RedirectAttributes attributes,
-            PasswordForm form
-            ) {
+            PasswordForm form) {
 
         // ファイルIDをModelに追加する
         model.addAttribute(
@@ -552,7 +551,7 @@ public class FileController {
         model.addAttribute("passwordForm", form);
 
         // ユーザ登録確認ページ
-        return "ConfirmDelete";
+        return "confirmDelete";
     }
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**
- * ページネーションのアイコンの画面表示数を変更するクラス
+ * ページネーションに関する変数を提供するクラス
  */
 
 public class PageWrapper<T> {
