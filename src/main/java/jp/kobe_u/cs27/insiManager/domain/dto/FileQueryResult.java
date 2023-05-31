@@ -6,6 +6,9 @@ import lombok.Data;
 
 import org.springframework.data.domain.Page;
 
+/**
+ * ファイル検索結果
+ */
 @Data
 public class FileQueryResult {
     

@@ -1,16 +1,12 @@
 package jp.kobe_u.cs27.insiManager.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,13 +28,15 @@ import lombok.RequiredArgsConstructor;
 import static jp.kobe_u.cs27.insiManager.configuration.exception.ErrorCode.*;
 
 import java.sql.Blob;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
 import javax.sql.rowset.serial.SerialBlob;
 
+/**
+ * ファイルに関する処理を提供するサービスクラス
+ */
 @Service
 @RequiredArgsConstructor
 public class FileService {
@@ -132,36 +130,32 @@ public class FileService {
          */
     }
 
-    /**
+    /*
+     * public ResponseEntity<Resource> loadFile(long fid) throws SQLException {
+     * if (files.existsById(fid)) {
+     * Optional<FileEntity> downloadFile = files.findById(fid);
+     * Blob downloadData = downloadFile.get().getData();
+     * byte[] bs;
+     * bs = downloadData.getBytes(1, (int) downloadData.length());
+     * return ResponseEntity.ok()
+     * .contentType(MediaType.parseMediaType(downloadFile.get().getFileType()))
+     * .header(HttpHeaders.CONTENT_DISPOSITION,
+     * "attachment; filename=\"" + downloadFile.get().getFileName()
+     * + "\"")
+     * .body(new ByteArrayResource(bs));
      * 
-     * @param fid
-     * @return ダウンロードファイル
-     * @throws SQLException
+     * }
+     * 
+     * else {
+     * throw new ValidationException(
+     * FILE_DOES_NOT_EXIST,
+     * "delete the file",
+     * String.format(
+     * " file %s does not exist",
+     * fid));
+     * }
+     * }
      */
-    public ResponseEntity<Resource> loadFile(long fid) throws SQLException {
-        if (files.existsById(fid)) {
-            Optional<FileEntity> downloadFile = files.findById(fid);
-            Blob downloadData = downloadFile.get().getData();
-            byte[] bs;
-            bs = downloadData.getBytes(1, (int) downloadData.length());
-            return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(downloadFile.get().getFileType()))
-                    .header(HttpHeaders.CONTENT_DISPOSITION,
-                            "attachment; filename=\"" + downloadFile.get().getFileName()
-                                    + "\"")
-                    .body(new ByteArrayResource(bs));
-
-        }
-
-        else {
-            throw new ValidationException(
-                    FILE_DOES_NOT_EXIST,
-                    "delete the file",
-                    String.format(
-                            " file %s does not exist",
-                            fid));
-        }
-    }
 
     /**
      * すべてのファイルを新しい順に取得

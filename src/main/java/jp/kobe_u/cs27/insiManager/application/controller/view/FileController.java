@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletResponse;
 import jp.kobe_u.cs27.insiManager.application.form.FileForm;
 import jp.kobe_u.cs27.insiManager.application.form.FileQueryForm;
+import jp.kobe_u.cs27.insiManager.application.form.PasswordForm;
 import jp.kobe_u.cs27.insiManager.configuration.exception.ValidationException;
 import jp.kobe_u.cs27.insiManager.domain.PageWrapper;
 import jp.kobe_u.cs27.insiManager.domain.entity.FileEntity;
@@ -172,7 +173,7 @@ public class FileController {
      * @return ファイル削除ページ
      */
 
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") long id) {
         // ダウンロード対象のファイルデータを取得
         Optional<FileEntity> file = files.findById(id);
@@ -479,7 +480,7 @@ public class FileController {
      */
 
     @GetMapping("/filequery/{sid}")
-    public String showInformationGidPage(Model model, RedirectAttributes attributes,
+    public String showInformationSidPage(Model model, RedirectAttributes attributes,
             @ModelAttribute FileQueryForm form, BindingResult bindingResult, @PathVariable("sid") Integer sid,
             Pageable pageable) {
 
@@ -531,10 +532,11 @@ public class FileController {
      * @return
      */
     @GetMapping("/getfid/{fid}")
-    public String confirmUserRegistration(
+    public String getFid(
             @PathVariable("fid") long fid,
             Model model,
-            RedirectAttributes attributes) {
+            RedirectAttributes attributes,
+            PasswordForm form) {
 
         // ファイルIDをModelに追加する
         model.addAttribute(
@@ -542,9 +544,11 @@ public class FileController {
                 fid);
 
         // ファイルの名前をModelに追加する
+        model.addAttribute("fid", fid);
         model.addAttribute("fileName", fileService.getFile(fid).get().getFileName());
         model.addAttribute("user", fileService.getFile(fid).get().getUser().getUid());
         model.addAttribute("addedTime", fileService.getFile(fid).get().getRecordedOn());
+        model.addAttribute("passwordForm", form);
 
         // ユーザ登録確認ページ
         return "confirmDelete";
