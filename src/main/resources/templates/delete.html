@@ -159,7 +159,7 @@
                                     th:id="year">
                                     <option th:value=null th:text="年度" />
                                     <option
-                                        th:each="i : ${#numbers.sequence(2001, 2050)}"
+                                        th:each="i : ${#numbers.sequence(1986, 2050)}"
                                         th:value="${i}"
                                         th:field="*{year}"
                                         th:text="${i}+年度" />
