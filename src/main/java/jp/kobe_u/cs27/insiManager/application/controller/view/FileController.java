@@ -551,7 +551,7 @@ public class FileController {
         model.addAttribute("passwordForm", form);
 
         // ユーザ登録確認ページ
-        return "confirmDelete";
+        return "confirmdeletion";
     }
 
 }
