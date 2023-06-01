@@ -153,13 +153,12 @@
                                         th:field="*{gid}"
                                         th:text="${gList.genreName}" />
                                 </select>
-
                                 <select class="form-select mb-3"
                                     th:name="year"
                                     th:id="year">
                                     <option th:value=null th:text="年度" />
                                     <option
-                                        th:each="i : ${#numbers.sequence(2001, 2050)}"
+                                        th:each="i : ${#numbers.sequence(1986, 2050)}"
                                         th:value="${i}"
                                         th:field="*{year}"
                                         th:text="${i}+年度" />

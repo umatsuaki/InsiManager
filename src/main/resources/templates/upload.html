@@ -58,11 +58,10 @@
                                 th:id="year"
                                 required>
                                 <option
-                                    th:each="i : ${#numbers.sequence(2001, 2050)}"
+                                    th:each="i : ${#numbers.sequence(1986, 2050)}"
                                     th:value="${i}" th:field="*{year}"
                                     th:text="${i}+年度" />
                             </select>
-
                             <div>
                                 <div class="form-group mb-3">
                                     <label for="data"> </label>
