@@ -203,8 +203,6 @@ public class FileController {
         model.addAttribute("genreList", genreList);
         List<Subject> subjectList = subjectService.getAllSubject();
         model.addAttribute("subjectList", subjectList);
-        List<FileEntity> fileList = fileService.getAllFile();
-        model.addAttribute("fileList", fileList);
 
         // フォームのバリデーション違反があった場合
         if (bindingResult.hasErrors()) {
@@ -278,8 +276,6 @@ public class FileController {
         model.addAttribute("genreList", genreList);
         List<Subject> subjectList = subjectService.getAllSubject();
         model.addAttribute("subjectList", subjectList);
-        List<FileEntity> fileList = fileService.getAllFile();
-        model.addAttribute("fileList", fileList);
 
         // フォームのバリデーション違反があった場合
         if (bindingResult.hasErrors()) {
@@ -341,8 +337,6 @@ public class FileController {
         model.addAttribute("genreList", genreList);
         List<Subject> subjectList = subjectService.getAllSubject();
         model.addAttribute("subjectList", subjectList);
-        List<FileEntity> fileList = fileService.getAllFile();
-        model.addAttribute("fileList", fileList);
 
         // フォームのバリデーション違反があった場合
         if (bindingResult.hasErrors()) {
@@ -426,8 +420,6 @@ public class FileController {
         model.addAttribute("genreList", genreList);
         List<Subject> subjectList = subjectService.getAllSubject();
         model.addAttribute("subjectList", subjectList);
-        List<FileEntity> fileList = fileService.getAllFile();
-        model.addAttribute("fileList", fileList);
 
         // フォームのバリデーション違反があった場合
         if (bindingResult.hasErrors()) {
@@ -489,8 +481,6 @@ public class FileController {
         model.addAttribute("genreList", genreList);
         List<Subject> subjectList = subjectService.getAllSubject();
         model.addAttribute("subjectList", subjectList);
-        List<FileEntity> fileList = fileService.getAllFile();
-        model.addAttribute("fileList", fileList);
 
         // フォームのバリデーション違反があった場合
         if (bindingResult.hasErrors()) {
