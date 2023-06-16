@@ -109,7 +109,7 @@ public class PageController {
     model.addAttribute("genreList", genreList);
     List<Subject> subjectList = subjectService.getAllSubject();
     model.addAttribute("subjectList", subjectList);
-    List<FileEntity> fileList = fileService.getAllFile();
+    List<FileEntity> fileList = fileService.get10File();
     model.addAttribute("fileList", fileList);
     return "upload";
   }

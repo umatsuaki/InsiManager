@@ -111,7 +111,7 @@ public class UserController {
       RedirectAttributes attributes,
       @ModelAttribute @Validated UserForm userform,
       @ModelAttribute FileQueryForm fileform,
-      BindingResult bindingResult,Pageable pageable) {
+      BindingResult bindingResult, Pageable pageable) {
 
     // フォームにバリデーション違反があった場合
     if (bindingResult.hasErrors()) {
@@ -143,9 +143,7 @@ public class UserController {
     model.addAttribute("genreList", genreList);
     List<Subject> subjectList = subjectService.getAllSubject();
     model.addAttribute("subjectList", subjectList);
-    List<FileEntity> fileList = fileService.getAllFile();
-    model.addAttribute("fileList", fileList);
-    model.addAttribute("fileQueryResult", fileService.query(fileform,pageable).getFilePage());
+    model.addAttribute("fileQueryResult", fileService.query(fileform, pageable).getFilePage());
 
     // ファイル検索ページ
     return "redirect:/";

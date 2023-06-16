@@ -5,7 +5,6 @@ import jp.kobe_u.cs27.insiManager.domain.entity.Genre;
 import jp.kobe_u.cs27.insiManager.domain.entity.Subject;
 import jp.kobe_u.cs27.insiManager.domain.entity.User;
 
-
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
@@ -51,7 +50,7 @@ public interface FileRepository
     /**
      * すべてのファイルをアップロード日順に取得
      */
-    List<FileEntity> findAllByOrderByRecordedOnDesc();
+    List<FileEntity> findTop10ByOrderByRecordedOnDesc();
 
     /**
      * 検索要素に対するSpecification
