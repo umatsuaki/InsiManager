@@ -158,10 +158,10 @@ public class FileService {
      */
 
     /**
-     * すべてのファイルを新しい順に取得
+     * すべてのファイルを新しい順に10個取得
      */
-    public List<FileEntity> getAllFile() {
-        return files.findAllByOrderByRecordedOnDesc();
+    public List<FileEntity> get10File() {
+        return files.findTop10ByOrderByRecordedOnDesc();
     }
 
     /**
