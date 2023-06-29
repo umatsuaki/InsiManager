@@ -165,44 +165,60 @@
                                 </select>
 
                                 <div>
-                                    <form method="get"
-                                        th:action="@{/fileQuery/search}">
-                                        <input
-                                            class="btn btn-dark mb-3 "
-                                            type="submit" value="検索">
-
-                                    </div>
-
-                                </form>
-                            </div>
-
-                            <br>
-
-                            <div class="container text-center">
-                                <div class="row">
-
-                                    <form method="get"
-                                        th:action="@{/}">
-                                        <input class="btn btn-info "
-                                            type="submit"
-                                            value="ファイル検索に戻る">
-                                    </form>
+                                    <input
+                                        class="btn btn-dark mb-3 "
+                                        type="submit" value="検索">
 
                                 </div>
-                            </div>
 
+                            </form>
+                        </div>
+
+                        <script th:inline="javascript">
+                            var uid = /*[[${uid}]]*/ "uid";
+                            if(uid == "null"){
+                                uid = "";
+                            }
+                            document.getElementById("uid").value = uid;
+                            document.getElementById("sid").selectedIndex = /*[[${sid}]]*/ 0;
+                            document.getElementById("gid").selectedIndex = /*[[${gid}]]*/ 0;
+                            var firstYear = 1986;
+                            var selectYear = /*[[${year}]]*/ 1986;
+                            if (selectYear == 0 || selectYear == null) {
+                                selectYear = firstYear - 1;
+                            }
+                            var year = selectYear - firstYear + 1;
+                            document.getElementById("year").selectedIndex = year;
+
+                        </script>
+
+                        <br>
+
+                        <div class="container text-center">
+                            <div class="row">
+
+                                <form method="get"
+                                    th:action="@{/}">
+                                    <input class="btn btn-info "
+                                        type="submit"
+                                        value="ファイル検索に戻る">
+                                </form>
+
+                            </div>
                         </div>
 
                     </div>
+
                 </div>
             </div>
+        </div>
 
-            <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
-                integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
-                crossorigin="anonymous"></script>
-            <script
-                src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
-                integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
-                crossorigin="anonymous"></script>
-        </body>
-    </html>
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
+            integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+            integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+            crossorigin="anonymous"></script>
+    </body>
+</html>

@@ -159,6 +159,24 @@
                             </form>
                         </div>
 
+                        <script th:inline="javascript">
+                            var uid = /*[[${uid}]]*/ "uid";
+                            if(uid == "null"){
+                                uid = "";
+                            }
+                            document.getElementById("uid").value = uid;
+                            document.getElementById("sid").selectedIndex = /*[[${sid}]]*/ 0;
+                            document.getElementById("gid").selectedIndex = /*[[${gid}]]*/ 0;
+                            var firstYear = 1986;
+                            var selectYear = /*[[${year}]]*/ 1986;
+                            if (selectYear == 0 || selectYear == null) {
+                                selectYear = firstYear - 1;
+                            }
+                            var year = selectYear - firstYear + 1;
+                            document.getElementById("year").selectedIndex = year;
+
+                        </script>
+
                         <br>
 
                         <div class="container text-center">
