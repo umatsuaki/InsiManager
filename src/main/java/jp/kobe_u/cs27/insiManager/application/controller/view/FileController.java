@@ -258,12 +258,17 @@ public class FileController {
         }
         if (sid == -1) {
             sid = null;
+            model.addAttribute("sid", 0);
         }
+
         if (gid == -1) {
             gid = null;
+            model.addAttribute("gid", 0);
         }
+
         if (year == -1) {
             year = null;
+            model.addAttribute("year", 0);
         }
 
         model.addAttribute(new FileQueryForm());
@@ -402,12 +407,15 @@ public class FileController {
         }
         if (sid == -1) {
             sid = null;
+            model.addAttribute("sid", 0);
         }
         if (gid == -1) {
             gid = null;
+            model.addAttribute("gid", 0);
         }
         if (year == -1) {
             year = null;
+            model.addAttribute("year", 0);
         }
 
         model.addAttribute(new FileQueryForm());
@@ -528,12 +536,17 @@ public class FileController {
             RedirectAttributes attributes,
             PasswordForm form) {
 
-        // ファイルIDをModelに追加する
-        model.addAttribute(
-                "fid",
-                fid);
+        // ファイルIDが存在しない場合
+        if (!fileService.getFile(fid).isPresent()) {
+            // エラーフラグをオンにする
+            attributes.addFlashAttribute(
+                    "isFileIdNotFoundError",
+                    true);
 
-        // ファイルの名前をModelに追加する
+            // 自分自身にリダイレクトする
+            return "redirect:/user/deletefile";
+        }
+
         model.addAttribute("fid", fid);
         model.addAttribute("fileName", fileService.getFile(fid).get().getFileName());
         model.addAttribute("user", fileService.getFile(fid).get().getUser().getUid());
