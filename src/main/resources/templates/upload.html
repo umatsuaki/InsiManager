@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>ファイル追加</title>
+        <link rel="stylesheet"
+            th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+        <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"
+            type="text/javascript"></script>
+    </head>
+
+    <body>
+        <div class="container text-center">
+            <div class="row">
+                <br>
+                <br>
+                <div class="col-3">
+                </div>
+                <div class="col-6">
+                    <br>
+                    <br>
+                    <div class="card text-dark bg-light mb-3">
+
+                        <form th:action="@{/user/addfile/add}"
+                            th:object="${fileForm}"
+                            method="post" enctype="multipart/form-data">
+
+                            <div class="card-header  border-danger mb-3">File
+                                Upload Form</div>
+
+                            <div class="form-group mb-3 ">
+                                <label for="uid" class="form-label"></label>
+                                <input th:field="*{uid}" type="text"
+                                    id="uid" class="form-control"
+                                    placeholder="Enter uid" required>
+                            </div>
+
+                            <select class="form-select mb-3"
+                                th:name="sid"
+                                th:id="sid"
+                                required>
+
+                                <option th:each="sList : ${subjectList}"
+                                    th:value="${sList.sid}"
+                                    th:field="*{sid}"
+                                    th:text="${sList.subjectName}" />
+                            </select>
+
+                            <select class="form-select mb-3" th:name="gid"
+                                th:id="gid"
+                                required>
+                                <option th:each="gList : ${genreList}"
+                                    th:value="${gList.gid}" th:field="*{gid}"
+                                    th:text="${gList.genreName}" />
+                            </select>
+
+                            <select class="form-select mb-5" th:name="year"
+                                th:id="year"
+                                required>
+                                <option
+                                    th:each="i : ${#numbers.sequence(1986, 2050)}"
+                                    th:value="${i}" th:field="*{year}"
+                                    th:text="${i}+年度" />
+                            </select>
+                            <div>
+                                <div class="form-group mb-3">
+                                    <label for="data"> </label>
+                                    <input type="file" class="form-control-file"
+                                        id="data"
+                                        th:field="*{data}" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="comment" class="form-label"></label>
+                                <input th:field="*{comment}"
+                                    class="form-control"
+                                    aria-describedby="commentHelp"
+                                    placeholder="Enter comment" id="comment"
+                                    type="text">
+                                <small id="commentHelp"
+                                    class="form-text text-muted">ファイルの説明を入力してください</small>
+                            </div>
+
+                            <div>
+                                <button type="submit" class="btn btn-dark mb-3">Upload</button>
+                            </div>
+                        </form>
+
+                    </div>
+                    <form method="get"
+                        th:action="@{/}">
+                        <input class="btn btn-info mb-3 "
+                            type="submit"
+                            value="ファイル検索に戻る">
+                    </form>
+                    <h2 th:if="${isUserDoesNotExistError}" class="text-danger">ユーザが見つかりません<br>ファイルをアップロードできません</h2>
+
+                </div>
+                <div class="col-3">
+                    <br>
+                    <br>
+
+                    <table
+                        id="container"
+                        class="table mb-3 text-center table-success table-bordered table-striped">
+                        <thead class="table-dark">
+                            <th>最新のファイルリスト</th>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(0).fid}, fileName=${fileList.get(0).fileName})}"
+                                        th:text="${fileList.get(0).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(1).fid}, fileName=${fileList.get(1).fileName})}"
+                                        th:text="${fileList.get(1).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(2).fid}, fileName=${fileList.get(2).fileName})}"
+                                        th:text="${fileList.get(2).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(3).fid}, fileName=${fileList.get(3).fileName})}"
+                                        th:text="${fileList.get(3).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a
+                                        th:href="@{/preview/{fileName}(id=${fileList.get(4).fid}, fileName=${fileList.get(4).fileName})}"
+                                        th:text="${fileList.get(4).fileName}"
+                                        target="_blank">PDFプレビュー</a>
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

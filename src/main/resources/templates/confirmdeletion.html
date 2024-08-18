@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>ファイル削除確認</title>
+        <link th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"
+            rel="stylesheet" />
+        <script type="text/javascript"
+            th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.min.js}"></script>
+    </head>
+    <body class="m-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-2"></div>
+
+                <div class="col-8">
+
+                    <br>
+                    <br>
+
+                    <h5 class=text-center>ファイル削除確認</h5>
+
+                    <form method="post"
+                        th:action="@{/delete/confirm/{fid} (fid = ${fid})}"
+                        th:object="${passwordForm}"
+                        class="mb-3">
+
+                        <table class="table text-dark text-center mb-3 ">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">ファイル名</th>
+                                    <td>[[${fileName}]]</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">追加人物</th>
+                                    <td>[[${user}]]</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">追加時刻</th>
+                                    <td>[[${addedTime}]]</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">パスワード</th>
+                                    <td>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class = "col-4"></div>
+                                        <div class = "col">
+                                        <label for="text" class="form-label"></label>
+                                        <input type="password" id="text"
+                                            th:field="*{password}"
+                                            class="form-control mb-3" 
+                                            required
+                                            placeholder="Enter password" />
+                                        </div>
+                                        <div class = "col-2"></div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <br>
+
+                        <div class="container">
+                            <div class="row">
+                                <div class="col"></div>
+                                <div class="col">
+                                    <input type="submit"
+                                        class="btn btn-danger "
+                                        value="削除する">
+                                </div>
+                            </form>
+                            <div class="col">
+                                <form method="get"
+                                    th:action="@{/user/deletefile}">
+                                    <input type="submit"
+                                        class="btn btn-primary mb-3"
+                                        value="やめる">
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+                        <div class = "container">
+                            <div class = "row">
+                                <div class = "col-4"></div>
+                                <div class = "col">
+                        <h2 th:if="${isPasswordIncorrect}"
+                                    class="text-danger">パスワードが正しくありません</h2>
+                                </div>
+                            </div>
+                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
